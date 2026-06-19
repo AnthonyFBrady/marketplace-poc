@@ -28,7 +28,6 @@
     "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5.15.12",
     "@tailwindcss/postcss": "^4",
     "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^20",
