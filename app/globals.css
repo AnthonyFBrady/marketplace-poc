@@ -1,26 +1,117 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-serif);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  /* Brand colours exposed as Tailwind utilities */
+  --color-brand-green:       #2D6A4F;
+  --color-brand-green-mid:   #40916C;
+  --color-brand-green-light: #74C69D;
+  --color-brand-green-tint:  rgba(45,106,79,0.08);
+  --color-brand-amber:       #D4900F;
+  --color-brand-amber-tint:  rgba(212,144,15,0.10);
+  --color-brand-bg:          #FAFAF8;
+  --color-brand-surface:     #F2F2EF;
+  --color-brand-elevated:    #E8E8E4;
+  --color-brand-ink:         #0F0F0E;
+  --color-brand-muted:       #525252;
+  --color-brand-faint:       #737373;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Brand palette */
+  --brand-bg:          #FAFAF8;
+  --brand-surface:     #F2F2EF;
+  --brand-elevated:    #E8E8E4;
+  --brand-ink:         #0F0F0E;
+
+  --brand-green:       #2D6A4F;
+  --brand-green-mid:   #40916C;
+  --brand-green-light: #74C69D;
+  --brand-green-tint:  rgba(45,106,79,0.08);
+
+  --brand-amber:       #D4900F;
+  --brand-amber-tint:  rgba(212,144,15,0.10);
+
+  /* Semantic */
+  --color-text:         #0F0F0E;
+  --color-text-muted:   #525252;
+  --color-text-faint:   #737373;
+  --color-outline:      rgba(0,0,0,0.08);
+  --color-outline-mid:  rgba(0,0,0,0.12);
+  --color-hover:        rgba(0,0,0,0.04);
+
+  /* shadcn overrides to match brand */
+  --background:            #FAFAF8;
+  --foreground:            #0F0F0E;
+  --card:                  #F2F2EF;
+  --card-foreground:       #0F0F0E;
+  --popover:               #FFFFFF;
+  --popover-foreground:    #0F0F0E;
+  --primary:               #2D6A4F;
+  --primary-foreground:    #FFFFFF;
+  --secondary:             #F2F2EF;
+  --secondary-foreground:  #0F0F0E;
+  --muted:                 #F2F2EF;
+  --muted-foreground:      #525252;
+  --accent:                rgba(45,106,79,0.08);
+  --accent-foreground:     #2D6A4F;
+  --destructive:           oklch(0.577 0.245 27.325);
+  --border:                rgba(0,0,0,0.08);
+  --input:                 rgba(0,0,0,0.08);
+  --ring:                  #40916C;
+  --radius:                0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    background-color: var(--brand-bg);
+    color: var(--color-text);
+    @apply antialiased;
+  }
+  html {
+    @apply h-full;
+  }
+  body {
+    @apply min-h-full;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* MapLibre GL overrides */
+.maplibregl-ctrl-logo { display: none !important; }
+.maplibregl-ctrl-attrib { display: none !important; }
+
+/* Hide scrollbar for filter bar and horizontal scroll areas */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

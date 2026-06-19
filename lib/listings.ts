@@ -1,0 +1,976 @@
+import { CategoryId } from "./categories";
+
+export type Review = {
+  author: string;
+  avatar: string;
+  rating: number;
+  text: string;
+  date: string;
+};
+
+export type Lister = {
+  name: string;
+  firstName: string;
+  avatar: string;
+  verified: boolean;
+  memberSince: string;
+  responseTime: string;
+  responseRate: number;
+  completedRentals: number;
+  rating: number;
+  reviewCount: number;
+  neighbourhood: string;
+  bio: string;
+  reviews: Review[];
+};
+
+export type Listing = {
+  id: string;
+  slug: string;
+  title: string;
+  category: CategoryId;
+  description: string;
+  photos: string[];
+  dailyRate: number;
+  weeklyRate?: number;
+  deposit: number;
+  lat: number;
+  lng: number;
+  neighbourhood: string;
+  lister: Lister;
+  rules: string[];
+  cancellationPolicy: "flexible" | "moderate" | "strict";
+  availableWeekends: boolean;
+  popularThisWeek: boolean;
+};
+
+// Unsplash photo IDs — reliable, no API key needed at these sizes
+const PHOTOS = {
+  pressureWasher: [
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1617634979319-f2cf0a87b949?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1629429408209-1f912961dbd8?w=800&q=80&fit=crop",
+  ],
+  ladder: [
+    "https://images.unsplash.com/photo-1571892053131-b24b11e5e47c?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1624615787933-f70a30a2d888?w=800&q=80&fit=crop",
+  ],
+  tileSaw: [
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1609220136736-443140cfeaa8?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop",
+  ],
+  drill: [
+    "https://images.unsplash.com/photo-1562259929-b4e1fd3aef09?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=80&fit=crop",
+  ],
+  tent: [
+    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1537905569824-f89f14cceb68?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=800&q=80&fit=crop",
+  ],
+  kayak: [
+    "https://images.unsplash.com/photo-1572640775399-51fcf5c0e5e5?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&fit=crop",
+  ],
+  campKitchen: [
+    "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80&fit=crop",
+  ],
+  speaker: [
+    "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80&fit=crop",
+  ],
+  photoBooth: [
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80&fit=crop",
+  ],
+  chairs: [
+    "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80&fit=crop",
+  ],
+  guitar: [
+    "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1525201548942-d8732f6617a0?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1564186763535-ebb21ef5277f?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1556449895-a33c9dba33dd?w=800&q=80&fit=crop",
+  ],
+  piano: [
+    "https://images.unsplash.com/photo-1552422535-c45813c61732?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1573871669414-010dbf73ca84?w=800&q=80&fit=crop",
+  ],
+  ebike: [
+    "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1595432541891-a461100fd815?w=800&q=80&fit=crop",
+  ],
+  snowboard: [
+    "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1512036666432-2181c1f26420?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1488591568813-1b6e1e9f05c7?w=800&q=80&fit=crop",
+  ],
+  paddleboard: [
+    "https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1572640775399-51fcf5c0e5e5?w=800&q=80&fit=crop",
+    "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80&fit=crop",
+  ],
+};
+
+const AVATARS = [
+  "https://i.pravatar.cc/96?img=1",
+  "https://i.pravatar.cc/96?img=5",
+  "https://i.pravatar.cc/96?img=8",
+  "https://i.pravatar.cc/96?img=11",
+  "https://i.pravatar.cc/96?img=20",
+  "https://i.pravatar.cc/96?img=32",
+  "https://i.pravatar.cc/96?img=44",
+  "https://i.pravatar.cc/96?img=57",
+  "https://i.pravatar.cc/96?img=60",
+  "https://i.pravatar.cc/96?img=65",
+];
+
+const REVIEWER_AVATARS = [
+  "https://i.pravatar.cc/48?img=3",
+  "https://i.pravatar.cc/48?img=7",
+  "https://i.pravatar.cc/48?img=14",
+  "https://i.pravatar.cc/48?img=22",
+  "https://i.pravatar.cc/48?img=36",
+  "https://i.pravatar.cc/48?img=47",
+];
+
+export const LISTINGS: Listing[] = [
+  {
+    id: "1",
+    slug: "sun-joe-pressure-washer-leslieville",
+    title: "Sun Joe electric pressure washer — perfect for driveways",
+    category: "tools",
+    description:
+      "I bought this for a one-time deck refinish and it's been sitting in my garage ever since. Sun Joe SPX3000, 2030 PSI, two nozzles included. Works great on driveways, decks, siding, and cars. Comes with 20 feet of hose. I live two blocks from Greenwood Park — easy pickup.",
+    photos: PHOTOS.pressureWasher,
+    dailyRate: 45,
+    weeklyRate: 180,
+    deposit: 80,
+    lat: 43.6672,
+    lng: -79.3347,
+    neighbourhood: "Leslieville",
+    lister: {
+      name: "Marcus Adeyemi",
+      firstName: "Marcus",
+      avatar: AVATARS[0],
+      verified: true,
+      memberSince: "March 2024",
+      responseTime: "Usually responds within 30 minutes",
+      responseRate: 98,
+      completedRentals: 47,
+      rating: 4.8,
+      reviewCount: 47,
+      neighbourhood: "Leslieville",
+      bio: "Homeowner in Leslieville, been here 8 years. Happy to help neighbours skip the hardware store.",
+      reviews: [
+        {
+          author: "Sofia",
+          avatar: REVIEWER_AVATARS[0],
+          rating: 5,
+          text: "Marcus was super responsive and the washer was exactly as described. My driveway looks brand new. Will definitely rent again.",
+          date: "May 2025",
+        },
+        {
+          author: "James",
+          avatar: REVIEWER_AVATARS[1],
+          rating: 5,
+          text: "Great experience. Pickup was easy, Marcus even helped me figure out which nozzle to use for the cedar deck.",
+          date: "April 2025",
+        },
+      ],
+    },
+    rules: [
+      "Return clean and dry",
+      "No use on vehicles unless agreed in advance",
+      "Return same day unless weekly booking",
+    ],
+    cancellationPolicy: "flexible",
+    availableWeekends: true,
+    popularThisWeek: true,
+  },
+  {
+    id: "2",
+    slug: "werner-24ft-extension-ladder-distillery",
+    title: "Werner 24-foot fibreglass extension ladder",
+    category: "tools",
+    description:
+      "Werner D6224-2 fibreglass ladder, 300 lb capacity, type IA. I used it to reshingle my garage and it's been leaning in the backyard ever since. Perfect for gutters, eavestroughs, second-storey windows. Heavy-duty and very stable. You'll need a truck or a van to take it.",
+    photos: PHOTOS.ladder,
+    dailyRate: 35,
+    weeklyRate: 140,
+    deposit: 60,
+    lat: 43.6503,
+    lng: -79.3594,
+    neighbourhood: "Distillery District",
+    lister: {
+      name: "Priya Sharma",
+      firstName: "Priya",
+      avatar: AVATARS[1],
+      verified: true,
+      memberSince: "January 2024",
+      responseTime: "Usually responds within 1 hour",
+      responseRate: 95,
+      completedRentals: 28,
+      rating: 4.7,
+      reviewCount: 28,
+      neighbourhood: "Distillery District",
+      bio: "Condo owner who somehow ended up with a 24-foot ladder after my building's renovation project. It needs to find a purpose.",
+      reviews: [
+        {
+          author: "David",
+          avatar: REVIEWER_AVATARS[2],
+          rating: 5,
+          text: "Ladder was in perfect condition. Priya was patient when I was running 20 minutes late for pickup.",
+          date: "June 2025",
+        },
+        {
+          author: "Nadia",
+          avatar: REVIEWER_AVATARS[3],
+          rating: 4,
+          text: "Solid ladder, exactly what I needed for painting the trim. Only thing — confirm you have a vehicle big enough beforehand.",
+          date: "May 2025",
+        },
+      ],
+    },
+    rules: [
+      "Requires a truck or cargo van — will not fit in a sedan",
+      "Return by end of rental day",
+      "No modifications or alterations",
+    ],
+    cancellationPolicy: "moderate",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "3",
+    slug: "dewalt-tile-saw-trinity-bellwoods",
+    title: "DeWalt 10-inch wet tile saw — pro grade",
+    category: "tools",
+    description:
+      "DeWalt D24000S. I used it to retile my bathroom and kitchen. Cuts porcelain, ceramic, natural stone, and glass tile. 1.5 HP motor, built-in water pump for clean cuts and dust suppression. Blade in good condition, has about 40 more square feet of porcelain in it before you'd want to replace. Comes with blade wrench and water tray.",
+    photos: PHOTOS.tileSaw,
+    dailyRate: 55,
+    weeklyRate: 220,
+    deposit: 100,
+    lat: 43.6466,
+    lng: -79.4137,
+    neighbourhood: "Trinity Bellwoods",
+    lister: {
+      name: "Tom Kowalski",
+      firstName: "Tom",
+      avatar: AVATARS[2],
+      verified: true,
+      memberSince: "September 2023",
+      responseTime: "Usually responds within 2 hours",
+      responseRate: 91,
+      completedRentals: 67,
+      rating: 4.9,
+      reviewCount: 67,
+      neighbourhood: "Trinity Bellwoods",
+      bio: "Contractor by trade, I have more tools than I know what to do with. Happy to give quick tips on whatever you're renting.",
+      reviews: [
+        {
+          author: "Rachel",
+          avatar: REVIEWER_AVATARS[4],
+          rating: 5,
+          text: "Tom is incredibly helpful — walked me through setup on the phone. The saw made my bathroom tile job look professional.",
+          date: "June 2025",
+        },
+        {
+          author: "Ben",
+          avatar: REVIEWER_AVATARS[5],
+          rating: 5,
+          text: "Exactly as described. I've rented from Tom three times now. Always reliable, always clean equipment.",
+          date: "May 2025",
+        },
+      ],
+    },
+    rules: [
+      "Return clean — rinse the water tray and blade guard",
+      "Do not use on asphalt, wood, or metal",
+      "Bring a bucket — cuts messy",
+    ],
+    cancellationPolicy: "strict",
+    availableWeekends: false,
+    popularThisWeek: true,
+  },
+  {
+    id: "4",
+    slug: "dewalt-rotary-hammer-drill-roncesvalles",
+    title: "DeWalt rotary hammer drill + SDS bit set",
+    category: "tools",
+    description:
+      "DeWalt D25133K, 1-1/8 inch SDS. Drills through concrete, brick, block, and stone like it's nothing. I used it to anchor shelves in my basement and for a deck ledger install. Comes with 14-piece SDS bit set covering most common anchor sizes. This is not a regular drill — it's for masonry, concrete, and demolition only.",
+    photos: PHOTOS.drill,
+    dailyRate: 40,
+    weeklyRate: 160,
+    deposit: 75,
+    lat: 43.6510,
+    lng: -79.4478,
+    neighbourhood: "Roncesvalles",
+    lister: {
+      name: "Ana Ferreira",
+      firstName: "Ana",
+      avatar: AVATARS[3],
+      verified: true,
+      memberSince: "May 2024",
+      responseTime: "Usually responds within 1 hour",
+      responseRate: 97,
+      completedRentals: 22,
+      rating: 4.6,
+      reviewCount: 22,
+      neighbourhood: "Roncesvalles",
+      bio: "I have a small house and a big set of tools. If I own something you need, just ask — I'm probably not using it.",
+      reviews: [
+        {
+          author: "Lucas",
+          avatar: REVIEWER_AVATARS[0],
+          rating: 5,
+          text: "Ana was so nice and the drill was perfect for anchoring my TV mount into brick. Huge time saver.",
+          date: "June 2025",
+        },
+        {
+          author: "Sara",
+          avatar: REVIEWER_AVATARS[1],
+          rating: 4,
+          text: "Worked perfectly. Ana responded quickly and was flexible on pickup time. Great experience overall.",
+          date: "April 2025",
+        },
+      ],
+    },
+    rules: [
+      "Masonry and concrete only — do not use on wood or metal",
+      "Return with bits cleaned and in case",
+      "Ear protection recommended — bring your own",
+    ],
+    cancellationPolicy: "flexible",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "5",
+    slug: "4-person-tent-sleeping-pads-king-west",
+    title: "REI 4-person tent + 3 sleeping pads — full setup",
+    category: "camping",
+    description:
+      "REI Co-op Wonderland 4 tent, freestanding, easy setup in about 12 minutes. Used twice — once in Algonquin, once in Killarney. Comes with three Thermarest Z-Lite sleeping pads (R-value 2.0, good down to about 10°C). Everything is clean, dry, and stored properly. Great for a family weekend or a friend group trip.",
+    photos: PHOTOS.tent,
+    dailyRate: 55,
+    weeklyRate: 220,
+    deposit: 100,
+    lat: 43.6447,
+    lng: -79.4013,
+    neighbourhood: "King West",
+    lister: {
+      name: "Olivia Chen",
+      firstName: "Olivia",
+      avatar: AVATARS[4],
+      verified: true,
+      memberSince: "April 2024",
+      responseTime: "Usually responds within 2 hours",
+      responseRate: 93,
+      completedRentals: 31,
+      rating: 4.8,
+      reviewCount: 31,
+      neighbourhood: "King West",
+      bio: "I camp every summer and somehow have accumulated enough gear for 6 people. Happy to share it rather than let it take up closet space.",
+      reviews: [
+        {
+          author: "Michael",
+          avatar: REVIEWER_AVATARS[2],
+          rating: 5,
+          text: "Perfect tent. Setup was genuinely quick and the Thermarests made sleeping on the ground almost comfortable. Olivia gave us good tips about the sleeping pads.",
+          date: "July 2025",
+        },
+        {
+          author: "Emma",
+          avatar: REVIEWER_AVATARS[3],
+          rating: 5,
+          text: "We took this to Algonquin for a long weekend. Everything was clean and in great shape. 10/10 would rent again.",
+          date: "June 2025",
+        },
+      ],
+    },
+    rules: [
+      "Return clean and dry — shake out debris before packing",
+      "No pets in the tent",
+      "Do not use stakes on tent floor — it will tear",
+    ],
+    cancellationPolicy: "moderate",
+    availableWeekends: true,
+    popularThisWeek: true,
+  },
+  {
+    id: "6",
+    slug: "tandem-kayak-leslieville",
+    title: "Old Town 2-person kayak + paddles + life jackets",
+    category: "camping",
+    description:
+      "Old Town Twin Heron tandem kayak. We've taken this to the Toronto Islands, Frenchman's Bay, and the Credit River. Comes with two paddles and two adult PFDs (medium and large). You'll need a car with a roof rack or a truck. It's 14 feet long and weighs about 65 lbs. I have foam pads and straps you can borrow for transport.",
+    photos: PHOTOS.kayak,
+    dailyRate: 70,
+    weeklyRate: 280,
+    deposit: 150,
+    lat: 43.6680,
+    lng: -79.3280,
+    neighbourhood: "Leslieville",
+    lister: {
+      name: "James Okafor",
+      firstName: "James",
+      avatar: AVATARS[5],
+      verified: true,
+      memberSince: "June 2023",
+      responseTime: "Usually responds within 4 hours",
+      responseRate: 88,
+      completedRentals: 53,
+      rating: 4.7,
+      reviewCount: 53,
+      neighbourhood: "Leslieville",
+      bio: "I paddle at least twice a month. If you need tips on where to launch in the GTA, I have strong opinions.",
+      reviews: [
+        {
+          author: "Fatima",
+          avatar: REVIEWER_AVATARS[4],
+          rating: 5,
+          text: "Took this to the Islands on a Saturday morning. James was super helpful with launch point suggestions. The kayak was stable and easy to paddle even for first-timers.",
+          date: "July 2025",
+        },
+        {
+          author: "Kevin",
+          avatar: REVIEWER_AVATARS[5],
+          rating: 4,
+          text: "Great kayak, well maintained. Just confirm you have the right roof rack setup before pickup — it's a big boat.",
+          date: "June 2025",
+        },
+      ],
+    },
+    rules: [
+      "Must have a roof rack — no exceptions",
+      "PFDs must be worn on water at all times",
+      "Return clean and rinsed",
+      "Do not drag on concrete or gravel",
+    ],
+    cancellationPolicy: "moderate",
+    availableWeekends: true,
+    popularThisWeek: true,
+  },
+  {
+    id: "7",
+    slug: "camp-kitchen-setup-distillery",
+    title: "Full camp kitchen — stove, cookware, cooler, lantern",
+    category: "camping",
+    description:
+      "Everything you need to eat well at a campsite. Coleman two-burner propane stove, 6-piece stainless cookware set (pot, pan, lid, utensils), 48-qt Igloo cooler, and a battery-powered LED lantern. Propane canister included for pickup, not for overnight rentals. This is the setup I bring to every backcountry base camp.",
+    photos: PHOTOS.campKitchen,
+    dailyRate: 35,
+    weeklyRate: 140,
+    deposit: 60,
+    lat: 43.6490,
+    lng: -79.3610,
+    neighbourhood: "Distillery District",
+    lister: {
+      name: "Sarah Nguyen",
+      firstName: "Sarah",
+      avatar: AVATARS[6],
+      verified: false,
+      memberSince: "August 2024",
+      responseTime: "Usually responds within 3 hours",
+      responseRate: 82,
+      completedRentals: 11,
+      rating: 4.5,
+      reviewCount: 11,
+      neighbourhood: "Distillery District",
+      bio: "I camp about 6 weekends a year. My gear deserves to see more of the province than just my storage unit.",
+      reviews: [
+        {
+          author: "Aaron",
+          avatar: REVIEWER_AVATARS[0],
+          rating: 5,
+          text: "Super convenient kit. Cooked a full pasta dinner at site the first night. Everything packed up neatly and Sarah was easy to coordinate with.",
+          date: "August 2025",
+        },
+        {
+          author: "Mei",
+          avatar: REVIEWER_AVATARS[1],
+          rating: 4,
+          text: "Good quality gear. Just note the cooler is large — it fits in most car trunks but was tight in our Honda Fit.",
+          date: "July 2025",
+        },
+      ],
+    },
+    rules: [
+      "Clean all cookware before returning",
+      "Return propane canister even if empty",
+      "Do not use inside a tent or enclosed space",
+    ],
+    cancellationPolicy: "flexible",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "8",
+    slug: "yamaha-pa-system-king-west",
+    title: "Yamaha StagePas portable PA — backyard events up to 150 people",
+    category: "party",
+    description:
+      "Yamaha StagePas 400BT — 400W, two column speakers on stands, built-in mixer with 8 channels, Bluetooth for wireless streaming. I use it for my band's rehearsals and the occasional backyard party. Handles up to about 150 people outdoors comfortably. All cables included, speakers in padded bags. I'll spend 10 minutes walking you through setup at pickup.",
+    photos: PHOTOS.speaker,
+    dailyRate: 95,
+    weeklyRate: 380,
+    deposit: 200,
+    lat: 43.6440,
+    lng: -79.3990,
+    neighbourhood: "King West",
+    lister: {
+      name: "Daniel Park",
+      firstName: "Daniel",
+      avatar: AVATARS[7],
+      verified: true,
+      memberSince: "February 2024",
+      responseTime: "Usually responds within 1 hour",
+      responseRate: 96,
+      completedRentals: 89,
+      rating: 4.9,
+      reviewCount: 89,
+      neighbourhood: "King West",
+      bio: "Musician and audio nerd. I know this gear inside and out and I'll make sure you do too before you leave.",
+      reviews: [
+        {
+          author: "Chloe",
+          avatar: REVIEWER_AVATARS[2],
+          rating: 5,
+          text: "Daniel is the best. He walked me through everything and the PA sounded incredible at our backyard birthday party. 60 people, no feedback issues, everyone could hear. Highly recommend.",
+          date: "August 2025",
+        },
+        {
+          author: "Ryan",
+          avatar: REVIEWER_AVATARS[3],
+          rating: 5,
+          text: "Used this for a corporate event in a park. Sounded professional. Daniel was available by text the whole time to troubleshoot.",
+          date: "July 2025",
+        },
+      ],
+    },
+    rules: [
+      "No use in rain or moisture — speakers are not waterproof",
+      "Volume above 75% requires consultation — I need to know the venue",
+      "Return all cables in the bag they came in",
+    ],
+    cancellationPolicy: "strict",
+    availableWeekends: true,
+    popularThisWeek: true,
+  },
+  {
+    id: "9",
+    slug: "photo-booth-kit-roncesvalles",
+    title: "Selfie photo booth kit — backdrop, ring light, instant prints",
+    category: "party",
+    description:
+      "Full selfie station setup: Canon DSLR on tripod, 7-foot ring light, 8x8 backdrop frame with a white muslin and a gold sequin option, wireless remote shutter, and a portable Canon Selphy printer for instant 4x6 prints. Paper included for up to 100 prints. I rent this out for birthday parties, bridal showers, and grad events. Super easy to set up — about 25 minutes.",
+    photos: PHOTOS.photoBooth,
+    dailyRate: 80,
+    weeklyRate: 300,
+    deposit: 175,
+    lat: 43.6530,
+    lng: -79.4490,
+    neighbourhood: "Roncesvalles",
+    lister: {
+      name: "Nina Kowalczyk",
+      firstName: "Nina",
+      avatar: AVATARS[8],
+      verified: true,
+      memberSince: "November 2023",
+      responseTime: "Usually responds within 30 minutes",
+      responseRate: 99,
+      completedRentals: 3,
+      rating: 4.3,
+      reviewCount: 3,
+      neighbourhood: "Roncesvalles",
+      bio: "Event photographer by trade. Built this photo booth kit for clients who want something DIY-friendly and affordable.",
+      reviews: [
+        {
+          author: "Aisha",
+          avatar: REVIEWER_AVATARS[4],
+          rating: 5,
+          text: "The photo booth was the highlight of my daughter's 16th birthday. The instant prints were a huge hit. Nina was incredibly helpful — very detailed setup instructions.",
+          date: "May 2025",
+        },
+        {
+          author: "Grace",
+          avatar: REVIEWER_AVATARS[5],
+          rating: 4,
+          text: "Really fun setup. Took about 30 mins to assemble which was accurate. The gold sequin backdrop is stunning.",
+          date: "April 2025",
+        },
+      ],
+    },
+    rules: [
+      "Do not use outdoors in wind — backdrop will collapse",
+      "Camera and lens are fragile — handle carefully",
+      "Paper refills available — contact me before event if you think you'll exceed 100 prints",
+    ],
+    cancellationPolicy: "moderate",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "10",
+    slug: "folding-chairs-tables-leslieville",
+    title: "12 folding chairs + 3 banquet tables — party package",
+    category: "party",
+    description:
+      "White resin folding chairs (12) and white folding banquet tables, 6 ft each (3 tables). This is my backyard party set. Everything is clean and stored in my garage. Tables seat 6-8 people each, chairs are comfortable for up to 4 hours. If you need tablecloths, I also have a set of white polyester ones for an extra $10.",
+    photos: PHOTOS.chairs,
+    dailyRate: 30,
+    weeklyRate: 120,
+    deposit: 50,
+    lat: 43.6650,
+    lng: -79.3310,
+    neighbourhood: "Leslieville",
+    lister: {
+      name: "Marcus Adeyemi",
+      firstName: "Marcus",
+      avatar: AVATARS[0],
+      verified: true,
+      memberSince: "March 2024",
+      responseTime: "Usually responds within 30 minutes",
+      responseRate: 98,
+      completedRentals: 47,
+      rating: 4.8,
+      reviewCount: 47,
+      neighbourhood: "Leslieville",
+      bio: "Homeowner in Leslieville, been here 8 years. Happy to help neighbours skip the hardware store.",
+      reviews: [
+        {
+          author: "Yemi",
+          avatar: REVIEWER_AVATARS[0],
+          rating: 5,
+          text: "Perfect for our backyard dinner party. Chairs were clean and comfortable, tables were solid. Marcus is a great neighbour to know.",
+          date: "June 2025",
+        },
+        {
+          author: "Iris",
+          avatar: REVIEWER_AVATARS[1],
+          rating: 5,
+          text: "Picked up and dropped off without any issues. Exactly what we needed for a graduation party.",
+          date: "May 2025",
+        },
+      ],
+    },
+    rules: [
+      "Return stacked and clean",
+      "Do not use chairs with all four legs on grass — they sink",
+      "Notify immediately if anything is broken",
+    ],
+    cancellationPolicy: "flexible",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "11",
+    slug: "fender-stratocaster-trinity-bellwoods",
+    title: "Fender Player Stratocaster — sunburst, hardshell case included",
+    category: "instruments",
+    description:
+      "2019 Fender Player Stratocaster in 3-colour sunburst. Maple neck, set up with 9-42 strings, plays really well. I play in a band and this is my backup guitar that hasn't left the case in 8 months. Comes in a hardshell case. Great for gigs, recording sessions, or just trying a Strat before you buy. Strings are fresh.",
+    photos: PHOTOS.guitar,
+    dailyRate: 40,
+    weeklyRate: 160,
+    deposit: 200,
+    lat: 43.6450,
+    lng: -79.4120,
+    neighbourhood: "Trinity Bellwoods",
+    lister: {
+      name: "Tom Kowalski",
+      firstName: "Tom",
+      avatar: AVATARS[2],
+      verified: true,
+      memberSince: "September 2023",
+      responseTime: "Usually responds within 2 hours",
+      responseRate: 91,
+      completedRentals: 67,
+      rating: 4.9,
+      reviewCount: 67,
+      neighbourhood: "Trinity Bellwoods",
+      bio: "Contractor by trade, I have more tools than I know what to do with. Happy to give quick tips on whatever you're renting.",
+      reviews: [
+        {
+          author: "Chris",
+          avatar: REVIEWER_AVATARS[2],
+          rating: 5,
+          text: "Borrowed this for a weekend recording session. Guitar played beautifully — the setup was spot on. Tom is incredibly trustworthy.",
+          date: "June 2025",
+        },
+        {
+          author: "Mia",
+          avatar: REVIEWER_AVATARS[3],
+          rating: 5,
+          text: "Used this to decide if I wanted to buy a Strat. I did. Incredible try-before-you-buy experience.",
+          date: "May 2025",
+        },
+      ],
+    },
+    rules: [
+      "Hardshell case must be used for transport — no gig bags",
+      "Do not modify tuning pegs or bridge",
+      "No smoking near the instrument",
+    ],
+    cancellationPolicy: "strict",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "12",
+    slug: "roland-digital-piano-king-west",
+    title: "Roland FP-60X digital piano — 88 weighted keys",
+    category: "instruments",
+    description:
+      "Roland FP-60X with 88 fully-weighted keys. Probably the best-feeling action of any digital piano in this price range. I bought it during COVID to get back into playing and life got in the way. Includes sustain pedal, power adapter, and a Roland stand. Weighted keys make it appropriate for both practice and performance. Piano app for lesson exercises is great for beginners.",
+    photos: PHOTOS.piano,
+    dailyRate: 50,
+    weeklyRate: 200,
+    deposit: 200,
+    lat: 43.6430,
+    lng: -79.3980,
+    neighbourhood: "King West",
+    lister: {
+      name: "Olivia Chen",
+      firstName: "Olivia",
+      avatar: AVATARS[4],
+      verified: true,
+      memberSince: "April 2024",
+      responseTime: "Usually responds within 2 hours",
+      responseRate: 93,
+      completedRentals: 31,
+      rating: 4.8,
+      reviewCount: 31,
+      neighbourhood: "King West",
+      bio: "I camp every summer and somehow have accumulated enough gear for 6 people. Happy to share it rather than let it take up closet space.",
+      reviews: [
+        {
+          author: "Hugo",
+          avatar: REVIEWER_AVATARS[4],
+          rating: 5,
+          text: "Rented this for 3 weeks while my piano was being serviced. The weighted keys make a real difference. Olivia was flexible and kind throughout.",
+          date: "July 2025",
+        },
+        {
+          author: "Lena",
+          avatar: REVIEWER_AVATARS[5],
+          rating: 5,
+          text: "Used this to record demos for an EP. The action is incredible for a digital piano. Highly recommend.",
+          date: "June 2025",
+        },
+      ],
+    },
+    rules: [
+      "Requires two people to move — 39 lbs",
+      "Keep away from liquids",
+      "Return with the stand attached as it was given",
+    ],
+    cancellationPolicy: "moderate",
+    availableWeekends: false,
+    popularThisWeek: false,
+  },
+  {
+    id: "13",
+    slug: "rad-power-ebike-distillery",
+    title: "RadCity 5 Plus e-bike — step-thru, pedal assist + throttle",
+    category: "sports",
+    description:
+      "Rad Power RadCity 5 Plus. Step-thru frame, so easy to get on and off. 750W motor, up to 72 km of range on a single charge. Pedal assist levels 1-5 plus a thumb throttle if you just want to cruise. I ride it to work most days in summer and it's been rock solid for 2 years. Great for the lakeshore path, High Park, or the Martin Goodman Trail.",
+    photos: PHOTOS.ebike,
+    dailyRate: 60,
+    weeklyRate: 240,
+    deposit: 150,
+    lat: 43.6520,
+    lng: -79.3570,
+    neighbourhood: "Distillery District",
+    lister: {
+      name: "Priya Sharma",
+      firstName: "Priya",
+      avatar: AVATARS[1],
+      verified: true,
+      memberSince: "January 2024",
+      responseTime: "Usually responds within 1 hour",
+      responseRate: 95,
+      completedRentals: 28,
+      rating: 4.7,
+      reviewCount: 28,
+      neighbourhood: "Distillery District",
+      bio: "Condo owner who somehow ended up with a 24-foot ladder after my building's renovation project. It needs to find a purpose.",
+      reviews: [
+        {
+          author: "Alex",
+          avatar: REVIEWER_AVATARS[0],
+          rating: 5,
+          text: "Rented this for a Saturday on the lakeshore. Effortless, comfortable, and so fun. Priya charged it overnight so I had full range. Great experience.",
+          date: "August 2025",
+        },
+        {
+          author: "Sofia",
+          avatar: REVIEWER_AVATARS[1],
+          rating: 5,
+          text: "Perfect for exploring the Beaches on a summer weekend. Priya was great at communicating and flexible on pickup time.",
+          date: "July 2025",
+        },
+      ],
+    },
+    rules: [
+      "Helmet required — I have a spare if you need one",
+      "Do not ride off-road or on trails not suitable for e-bikes",
+      "Charge to full before returning — charger provided",
+    ],
+    cancellationPolicy: "flexible",
+    availableWeekends: true,
+    popularThisWeek: true,
+  },
+  {
+    id: "14",
+    slug: "burton-snowboard-roncesvalles",
+    title: "Burton Custom snowboard 158W + Bindings — ride-ready",
+    category: "sports",
+    description:
+      "2022 Burton Custom 158W (wide) with Burton Cartel Re:Flex bindings set to a 21-degree front, 6-degree back (adjustable). I wax it before every season. Edges are sharp. Great all-mountain board, works on groomed runs, trees, and light powder. Set up for a rider around 5'10-6'2 with size 11-13 boots. Boots NOT included — bring your own.",
+    photos: PHOTOS.snowboard,
+    dailyRate: 45,
+    weeklyRate: 180,
+    deposit: 150,
+    lat: 43.6490,
+    lng: -79.4510,
+    neighbourhood: "Roncesvalles",
+    lister: {
+      name: "Ana Ferreira",
+      firstName: "Ana",
+      avatar: AVATARS[3],
+      verified: true,
+      memberSince: "May 2024",
+      responseTime: "Usually responds within 1 hour",
+      responseRate: 97,
+      completedRentals: 22,
+      rating: 4.3,
+      reviewCount: 14,
+      neighbourhood: "Roncesvalles",
+      bio: "I have a small house and a big set of tools. If I own something you need, just ask — I'm probably not using it.",
+      reviews: [
+        {
+          author: "Matt",
+          avatar: REVIEWER_AVATARS[2],
+          rating: 4,
+          text: "Board was in great shape and the edges were sharp as described. Great value compared to the hill rental shop.",
+          date: "February 2025",
+        },
+        {
+          author: "Jen",
+          avatar: REVIEWER_AVATARS[3],
+          rating: 4,
+          text: "Solid board. Just confirm boot size compatibility before you rent — the bindings are set for bigger feet.",
+          date: "January 2025",
+        },
+      ],
+    },
+    rules: [
+      "Boots not included — you must supply your own",
+      "No use in slush or spring conditions — edges will rust",
+      "Return in bag provided",
+    ],
+    cancellationPolicy: "moderate",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+  {
+    id: "15",
+    slug: "paddleboard-king-west",
+    title: "iRocker All-Around 11ft inflatable paddleboard",
+    category: "sports",
+    description:
+      "iRocker All-Around 11 inflatable stand-up paddleboard. Comes with pump, paddle (adjustable 68-84 inches), leash, backpack carry bag, and repair kit. Inflates in about 10-12 minutes. Rated for up to 300 lbs. Super stable — great for beginners. We've taken it to Lake Ontario, the Credit River, and Humber Bay. Perfect for calm water days.",
+    photos: PHOTOS.paddleboard,
+    dailyRate: 55,
+    weeklyRate: 220,
+    deposit: 120,
+    lat: 43.6445,
+    lng: -79.4020,
+    neighbourhood: "King West",
+    lister: {
+      name: "Daniel Park",
+      firstName: "Daniel",
+      avatar: AVATARS[7],
+      verified: true,
+      memberSince: "February 2024",
+      responseTime: "Usually responds within 1 hour",
+      responseRate: 96,
+      completedRentals: 89,
+      rating: 4.9,
+      reviewCount: 89,
+      neighbourhood: "King West",
+      bio: "Musician and audio nerd. I know this gear inside and out and I'll make sure you do too before you leave.",
+      reviews: [
+        {
+          author: "Lia",
+          avatar: REVIEWER_AVATARS[4],
+          rating: 5,
+          text: "First time paddleboarding and the board was incredibly stable. Daniel even texted to ask how it went. Would rent a hundred more times.",
+          date: "August 2025",
+        },
+        {
+          author: "Noah",
+          avatar: REVIEWER_AVATARS[5],
+          rating: 5,
+          text: "Took this to Humber Bay twice in one weekend. Daniel was flexible and the board was perfect.",
+          date: "July 2025",
+        },
+      ],
+    },
+    rules: [
+      "Wear the leash at all times on open water",
+      "Rinse with fresh water before returning",
+      "Do not drag on pavement or concrete",
+    ],
+    cancellationPolicy: "flexible",
+    availableWeekends: true,
+    popularThisWeek: false,
+  },
+];
+
+export function getListingBySlug(slug: string): Listing | undefined {
+  return LISTINGS.find((l) => l.slug === slug);
+}
+
+export function getListingsByCategory(category: CategoryId): Listing[] {
+  return LISTINGS.filter((l) => l.category === category);
+}
+
+export function getReviewLabel(count: number): string {
+  if (count === 0) return "New member";
+  if (count >= 50) return "Community favourite";
+  if (count >= 25) return "Established";
+  if (count >= 10) return "Trusted";
+  return "";
+}

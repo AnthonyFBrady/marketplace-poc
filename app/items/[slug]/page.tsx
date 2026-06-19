@@ -1,0 +1,238 @@
+import { notFound } from 'next/navigation';
+import { getListingBySlug, LISTINGS } from '@/lib/listings';
+import { getCategoryById } from '@/lib/categories';
+import { ListingGallery } from '@/components/ListingGallery';
+import { ListerProfile } from '@/components/ListerProfile';
+import { TrustBadge } from '@/components/TrustBadge';
+import { MapPin, AlertCircle, X, Check } from 'lucide-react';
+import Link from 'next/link';
+
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateStaticParams() {
+  return LISTINGS.map((l) => ({ slug: l.slug }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const listing = getListingBySlug(slug);
+  if (!listing) return {};
+  return {
+    title: `${listing.title} — Borrow`,
+    description: listing.description,
+  };
+}
+
+const POLICY_COPY = {
+  flexible: 'Full refund if cancelled 24 hours before pickup.',
+  moderate: 'Full refund if cancelled 3 days before pickup.',
+  strict: 'No refund within 5 days of pickup.',
+};
+
+export default async function ListingPage({ params }: Props) {
+  const { slug } = await params;
+  const listing = getListingBySlug(slug);
+  if (!listing) notFound();
+
+  const category = getCategoryById(listing.category);
+
+  return (
+    <div style={{ background: '#FAFAF8', minHeight: '100vh' }}>
+      {/* Nav */}
+      <header
+        className="sticky top-0 z-40 flex items-center gap-3 px-5 py-3"
+        style={{ background: '#FAFAF8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
+      >
+        <Link
+          href="/"
+          className="font-[family-name:var(--font-serif)]"
+          style={{ fontSize: 20, fontWeight: 600, color: '#2D6A4F', letterSpacing: '-0.02em' }}
+        >
+          Borrow
+        </Link>
+        <span style={{ color: 'rgba(0,0,0,0.20)', fontSize: 16 }}>/</span>
+        <span
+          style={{ fontSize: 13, color: '#525252' }}
+          className="line-clamp-1"
+        >
+          {listing.title}
+        </span>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
+          {/* Left column */}
+          <div>
+            {/* Gallery */}
+            <ListingGallery photos={listing.photos} title={listing.title} />
+
+            {/* Title + meta */}
+            <div className="mt-6">
+              <div className="flex items-center gap-2 flex-wrap mb-2">
+                <span
+                  className="text-sm px-2.5 py-0.5 rounded-full font-medium"
+                  style={{ background: 'rgba(0,0,0,0.06)', color: '#525252' }}
+                >
+                  {category.emoji} {category.label}
+                </span>
+                <span className="flex items-center gap-1 text-sm" style={{ color: '#737373' }}>
+                  <MapPin size={13} strokeWidth={2} />
+                  {listing.neighbourhood}, Toronto
+                </span>
+                {listing.popularThisWeek && <TrustBadge variant="popular" size="md" />}
+              </div>
+
+              <h1
+                className="font-[family-name:var(--font-serif)] leading-snug mb-4"
+                style={{ fontSize: 26, fontWeight: 600, color: '#0F0F0E' }}
+              >
+                {listing.title}
+              </h1>
+
+              <p style={{ fontSize: 15, color: '#525252', lineHeight: 1.75 }}>
+                {listing.description}
+              </p>
+            </div>
+
+            {/* Rules */}
+            <div
+              className="mt-8 p-5 rounded-2xl"
+              style={{ background: '#F2F2EF' }}
+            >
+              <h2 style={{ fontSize: 15, fontWeight: 600, color: '#0F0F0E', marginBottom: 10 }}>
+                Item rules
+              </h2>
+              <ul className="flex flex-col gap-2">
+                {listing.rules.map((rule, i) => (
+                  <li key={i} className="flex items-start gap-2" style={{ fontSize: 14, color: '#525252' }}>
+                    <AlertCircle size={14} strokeWidth={2} style={{ color: '#D4900F', marginTop: 3, flexShrink: 0 }} />
+                    {rule}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Cancellation */}
+            <div className="mt-4 flex items-start gap-2" style={{ fontSize: 13, color: '#737373' }}>
+              {listing.cancellationPolicy === 'flexible'
+                ? <Check size={14} strokeWidth={2} style={{ color: '#2D6A4F', marginTop: 2 }} />
+                : <X size={14} strokeWidth={2} style={{ color: '#D4900F', marginTop: 2 }} />
+              }
+              <span>
+                <strong style={{ color: '#525252', textTransform: 'capitalize' }}>
+                  {listing.cancellationPolicy} cancellation:
+                </strong>{' '}
+                {POLICY_COPY[listing.cancellationPolicy]}
+              </span>
+            </div>
+
+            {/* How protection works */}
+            <details
+              className="mt-8 p-5 rounded-2xl cursor-pointer"
+              style={{ background: 'rgba(45,106,79,0.06)', border: '1px solid rgba(45,106,79,0.12)' }}
+            >
+              <summary
+                style={{ fontSize: 14, fontWeight: 600, color: '#2D6A4F', listStyle: 'none' }}
+                className="flex items-center justify-between"
+              >
+                How rental protection works
+                <span style={{ fontSize: 12, fontWeight: 400 }}>+</span>
+              </summary>
+              <p style={{ fontSize: 14, color: '#525252', lineHeight: 1.7, marginTop: 10 }}>
+                Borrow holds a refundable security deposit from renters at the time of booking. If the
+                item is returned undamaged, the deposit is released within 48 hours. If there is a
+                dispute, our team reviews photo evidence from both parties and mediates a fair resolution.
+                For high-value items, we partner with Duuo by Co-operators for embedded insurance coverage.
+              </p>
+            </details>
+
+            {/* Lister profile — mobile only */}
+            <div className="lg:hidden mt-10 pt-8" style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+              <h2 style={{ fontSize: 15, fontWeight: 600, color: '#0F0F0E', marginBottom: 16 }}>
+                Meet {listing.lister.firstName}
+              </h2>
+              <ListerProfile lister={listing.lister} />
+            </div>
+          </div>
+
+          {/* Right column — sticky booking panel */}
+          <div className="hidden lg:block">
+            <div
+              className="sticky top-20 rounded-2xl p-6 flex flex-col gap-5"
+              style={{
+                background: '#FFFFFF',
+                boxShadow: '0 2px 20px rgba(0,0,0,0.10)',
+                border: '1px solid rgba(0,0,0,0.08)',
+              }}
+            >
+              {/* Price */}
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span style={{ fontSize: 26, fontWeight: 700, color: '#0F0F0E' }}>
+                    ${listing.dailyRate}
+                  </span>
+                  <span style={{ fontSize: 14, color: '#737373' }}>/day</span>
+                </div>
+                {listing.weeklyRate && (
+                  <div style={{ fontSize: 13, color: '#525252', marginTop: 2 }}>
+                    ${listing.weeklyRate}/week · save {Math.round(100 - (listing.weeklyRate / (listing.dailyRate * 7)) * 100)}%
+                  </div>
+                )}
+                <div style={{ fontSize: 13, color: '#737373', marginTop: 4 }}>
+                  + ${listing.deposit} refundable deposit
+                </div>
+              </div>
+
+              {/* Date placeholder */}
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{ border: '1.5px solid rgba(0,0,0,0.14)' }}
+              >
+                <div className="grid grid-cols-2">
+                  <div
+                    className="p-3"
+                    style={{ borderRight: '1px solid rgba(0,0,0,0.10)' }}
+                  >
+                    <div style={{ fontSize: 10, fontWeight: 600, color: '#737373', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      From
+                    </div>
+                    <div style={{ fontSize: 14, color: '#525252', marginTop: 2 }}>Add date</div>
+                  </div>
+                  <div className="p-3">
+                    <div style={{ fontSize: 10, fontWeight: 600, color: '#737373', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      To
+                    </div>
+                    <div style={{ fontSize: 14, color: '#525252', marginTop: 2 }}>Add date</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <button
+                className="w-full rounded-xl py-3.5 font-semibold text-base transition-opacity hover:opacity-90"
+                style={{ background: '#2D6A4F', color: '#FFFFFF' }}
+                onClick={() => alert('Booking is coming soon. This is a POC.')}
+              >
+                Request to Borrow
+              </button>
+              <p className="text-center" style={{ fontSize: 12, color: '#737373', marginTop: -8 }}>
+                You won&apos;t be charged yet
+              </p>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: 'rgba(0,0,0,0.08)' }} />
+
+              {/* Lister */}
+              <div>
+                <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0F0F0E', marginBottom: 14 }}>
+                  Meet {listing.lister.firstName}
+                </h3>
+                <ListerProfile lister={listing.lister} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
