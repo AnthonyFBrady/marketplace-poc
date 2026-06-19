@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { Star, Clock, CheckCircle, MessageCircle } from 'lucide-react';
 import { Lister, getReviewLabel } from '@/lib/listings';

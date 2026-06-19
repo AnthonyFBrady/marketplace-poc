@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star, MapPin, Clock, Flame } from 'lucide-react';
