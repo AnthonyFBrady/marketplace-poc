@@ -163,15 +163,24 @@ export function Nav() {
             pointerEvents: expandedOpen ? 'auto' : 'none',
           }}
         >
-          {/* Job chip marquee */}
-          <div style={{ height: 52, display: 'flex', alignItems: 'center' }}>
+          {/* Job chip marquee — constrained to page max-width so it never bleeds past the content area */}
+          <div style={{ height: 52 }}>
+            <div
+              style={{
+                maxWidth: navMaxWidth(pathname),
+                margin: '0 auto',
+                height: 52,
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 'var(--space-2)',
                 width: 'max-content',
-                paddingLeft: 'var(--space-2)',
                 animation: 'marquee 28s linear infinite',
               }}
               onMouseEnter={(e) => {
@@ -209,6 +218,7 @@ export function Nav() {
                   <span>{job.label}</span>
                 </button>
               ))}
+            </div>
             </div>
           </div>
 

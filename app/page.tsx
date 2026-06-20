@@ -38,11 +38,11 @@ export default function HomePage() {
         return (
           <div key={jobId} style={{ marginBottom: 'var(--space-10)' }}>
             <div style={pageWrap}>
-              <div className="flex items-end justify-between" style={{ marginBottom: 'var(--space-5)' }}>
-                <div>
-                  <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 'var(--space-2)' }}>
-                    {job.emoji}
-                  </div>
+              <div style={{ marginBottom: 'var(--space-5)' }}>
+                <div style={{ fontSize: 26, lineHeight: 1, marginBottom: 'var(--space-2)' }}>
+                  {job.emoji}
+                </div>
+                <div className="flex items-baseline" style={{ gap: 'var(--space-3)', marginBottom: 'var(--space-1)' }}>
                   <h2
                     className="font-[family-name:var(--font-serif)]"
                     style={{
@@ -51,29 +51,27 @@ export default function HomePage() {
                       color: 'var(--color-text)',
                       letterSpacing: 'var(--tracking-serif)',
                       lineHeight: 'var(--leading-snug)',
-                      marginBottom: 'var(--space-1)',
                     }}
                   >
                     {job.label}
                   </h2>
-                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
-                    {job.tagline}
-                  </p>
+                  <Link
+                    href={`/search?job=${job.id}`}
+                    className="flex items-center gap-1 shrink-0 transition-opacity hover:opacity-70"
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      fontWeight: 500,
+                      color: 'var(--color-action)',
+                    }}
+                    onClick={() => track('job_chip_clicked', { job: job.id })}
+                  >
+                    See all
+                    <ArrowRight size={13} strokeWidth={2} />
+                  </Link>
                 </div>
-                <Link
-                  href={`/search?job=${job.id}`}
-                  className="flex items-center gap-1 shrink-0 ml-6 transition-opacity hover:opacity-70"
-                  style={{
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: 500,
-                    color: 'var(--color-action)',
-                    paddingBottom: 2,
-                  }}
-                  onClick={() => track('job_chip_clicked', { job: job.id })}
-                >
-                  See all
-                  <ArrowRight size={13} strokeWidth={2} />
-                </Link>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
+                  {job.tagline}
+                </p>
               </div>
 
               <div
