@@ -20,7 +20,7 @@ export function BookingPanel({ listing }: Props) {
       {/* Price */}
       <div>
         <div className="flex items-baseline gap-1.5">
-          <span style={{ fontSize: 26, fontWeight: 700, color: '#0F0F0E' }}>
+          <span style={{ fontSize: 26, fontWeight: 700, color: '#D4900F' }}>
             ${listing.dailyRate}
           </span>
           <span style={{ fontSize: 14, color: '#737373' }}>/day</span>

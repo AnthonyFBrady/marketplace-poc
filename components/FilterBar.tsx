@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { ShieldCheck, X, SlidersHorizontal } from 'lucide-react';
+import { ShieldCheck, X } from 'lucide-react';
 import { CATEGORIES, CategoryId } from '@/lib/categories';
 import { cn } from '@/lib/utils';
 
@@ -23,8 +22,6 @@ const isDefault = (f: Filters) =>
   f.category === null && !f.verifiedOnly && f.maxPrice === 200 && f.distanceKm === 25;
 
 export function FilterBar({ filters, onChange }: Props) {
-  const [showMore, setShowMore] = useState(false);
-
   const setCategory = (id: CategoryId | null) =>
     onChange({ ...filters, category: filters.category === id ? null : id });
 

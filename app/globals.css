@@ -32,11 +32,10 @@
   --radius-xl: calc(var(--radius) * 1.4);
 
   /* Brand colours exposed as Tailwind utilities */
-  --color-brand-green:       #2D6A4F;
-  --color-brand-green-mid:   #40916C;
-  --color-brand-green-light: #74C69D;
-  --color-brand-green-tint:  rgba(45,106,79,0.08);
-  --color-brand-amber:       #D4900F;
+  --color-brand-green:       #2D6A4F;   /* primary — buttons, active states, badges */
+  --color-brand-green-hover: #255C43;   /* darker on hover */
+  --color-brand-green-tint:  rgba(45,106,79,0.08); /* backgrounds, badge fills */
+  --color-brand-amber:       #D4900F;   /* price, stars, warmth moments */
   --color-brand-amber-tint:  rgba(212,144,15,0.10);
   --color-brand-bg:          #FAFAF8;
   --color-brand-surface:     #F2F2EF;
@@ -54,8 +53,7 @@
   --brand-ink:         #0F0F0E;
 
   --brand-green:       #2D6A4F;
-  --brand-green-mid:   #40916C;
-  --brand-green-light: #74C69D;
+  --brand-green-hover: #255C43;
   --brand-green-tint:  rgba(45,106,79,0.08);
 
   --brand-amber:       #D4900F;

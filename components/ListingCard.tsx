@@ -2,13 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Star, MapPin, Clock, Flame } from 'lucide-react';
+import { Star, MapPin, Clock } from 'lucide-react';
 import { Listing, getReviewLabel } from '@/lib/listings';
 import { TrustBadge } from '@/components/TrustBadge';
 import { getCategoryById } from '@/lib/categories';
-import { formatDistance, distanceKm } from '@/lib/utils';
-
-const TORONTO_CENTER = { lat: 43.6532, lng: -79.3832 };
 
 type Props = {
   listing: Listing;
@@ -19,8 +16,6 @@ type Props = {
 export function ListingCard({ listing, highlighted, onHover }: Props) {
   const label = getReviewLabel(listing.lister.reviewCount);
   const category = getCategoryById(listing.category);
-  const km = distanceKm(TORONTO_CENTER.lat, TORONTO_CENTER.lng, listing.lat, listing.lng);
-  const distLabel = formatDistance(km);
 
   return (
     <Link
@@ -61,34 +56,34 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
 
       {/* Content */}
       <div className="p-3">
-        {/* Title + distance */}
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3
-            className="font-[family-name:var(--font-serif)] leading-snug line-clamp-2"
-            style={{ fontSize: 14, color: '#0F0F0E', fontWeight: 500 }}
-          >
-            {listing.title}
-          </h3>
+        {/* Title */}
+        <h3
+          className="font-[family-name:var(--font-serif)] leading-snug line-clamp-2 mb-1"
+          style={{ fontSize: 14, color: '#0F0F0E', fontWeight: 500 }}
+        >
+          {listing.title}
+        </h3>
+
+        {/* Price + neighbourhood */}
+        <div className="flex items-baseline justify-between gap-2 mb-2">
+          <div className="flex items-baseline gap-1.5">
+            <span style={{ fontSize: 16, fontWeight: 600, color: '#D4900F' }}>
+              ${listing.dailyRate}
+            </span>
+            <span style={{ fontSize: 12, color: '#737373' }}>/day</span>
+            {listing.weeklyRate && (
+              <span style={{ fontSize: 11, color: '#525252' }}>
+                · ${listing.weeklyRate}/wk
+              </span>
+            )}
+          </div>
           <span
-            className="shrink-0 flex items-center gap-0.5 mt-0.5"
+            className="shrink-0 flex items-center gap-0.5"
             style={{ fontSize: 11, color: '#737373', whiteSpace: 'nowrap' }}
           >
             <MapPin size={10} strokeWidth={2} />
-            {distLabel}
+            {listing.neighbourhood}
           </span>
-        </div>
-
-        {/* Price */}
-        <div className="flex items-baseline gap-1.5 mb-2">
-          <span style={{ fontSize: 16, fontWeight: 600, color: '#0F0F0E' }}>
-            ${listing.dailyRate}
-          </span>
-          <span style={{ fontSize: 12, color: '#737373' }}>/day</span>
-          {listing.weeklyRate && (
-            <span style={{ fontSize: 11, color: '#525252' }}>
-              · ${listing.weeklyRate}/wk
-            </span>
-          )}
         </div>
 
         {/* Lister row */}
