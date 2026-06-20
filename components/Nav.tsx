@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Search, Sparkles, Wrench, Sun, Mountain, Music, Bike, Film } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { useToast } from '@/components/ToastProvider';
 import { track } from '@/lib/analytics';
@@ -17,6 +17,16 @@ function navMaxWidth(pathname: string): string {
 }
 
 const CHIP_DUET = [...JOBS, ...JOBS];
+
+const JOB_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; color?: string }>> = {
+  'spring-clean':   Sparkles,
+  'home-reno':      Wrench,
+  'backyard-party': Sun,
+  'camping-trip':   Mountain,
+  'music-events':   Music,
+  'get-moving':     Bike,
+  'host-a-show':    Film,
+};
 
 export function Nav() {
   const { show } = useToast();
@@ -265,7 +275,7 @@ export function Nav() {
                       flexShrink: 0,
                     }}
                   >
-                    <span style={{ fontSize: 18, lineHeight: 1 }}>{job.emoji}</span>
+                    {(() => { const Icon = JOB_ICONS[job.id]; return Icon ? <Icon size={14} strokeWidth={1.75} /> : null; })()}
                     <span>{job.label}</span>
                   </button>
                 ))}

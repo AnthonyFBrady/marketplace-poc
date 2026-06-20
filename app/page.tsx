@@ -38,10 +38,7 @@ export default function HomePage() {
         return (
           <div key={jobId} style={{ marginBottom: 'var(--space-10)' }}>
             <div style={pageWrap}>
-              <div style={{ marginBottom: 'var(--space-5)' }}>
-                <div style={{ fontSize: 26, lineHeight: 1, marginBottom: 'var(--space-2)' }}>
-                  {job.emoji}
-                </div>
+              <div style={{ marginBottom: 'var(--space-4)' }}>
                 <div className="flex items-baseline" style={{ gap: 'var(--space-3)', marginBottom: 'var(--space-1)' }}>
                   <h2
                     className="font-[family-name:var(--font-serif)]"
@@ -75,8 +72,8 @@ export default function HomePage() {
               </div>
 
               <div
-                className="grid gap-5"
-                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}
+                className="grid"
+                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--space-4)' }}
               >
                 {sectionListings.map((l) => (
                   <ListingCard key={l.id} listing={l} />

@@ -2,10 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Star, MapPin, Clock, Flame } from 'lucide-react';
-import { Listing, getReviewLabel } from '@/lib/listings';
-import { TrustBadge } from '@/components/TrustBadge';
-import { getCategoryById } from '@/lib/categories';
+import { Star, Flame } from 'lucide-react';
+import { Listing } from '@/lib/listings';
 
 type Props = {
   listing: Listing;
@@ -14,179 +12,87 @@ type Props = {
 };
 
 export function ListingCard({ listing, highlighted, onHover }: Props) {
-  const label = getReviewLabel(listing.lister.reviewCount);
-  const category = getCategoryById(listing.category);
-
   return (
     <Link
       href={`/items/${listing.slug}`}
       onMouseEnter={() => onHover?.(listing.id)}
       onMouseLeave={() => onHover?.(null)}
-      className="block overflow-hidden transition-all duration-200"
-      style={{
-        borderRadius: 'var(--r-card)',
-        background: '#FFFFFF',
-        boxShadow: highlighted ? 'var(--shadow-selected)' : 'var(--shadow-low)',
-        transform: highlighted ? 'translateY(-1px)' : 'none',
-      }}
+      className="block group"
+      style={{ cursor: 'pointer' }}
     >
-      {/* Photo */}
-      <div className="relative w-full" style={{ aspectRatio: '4/3', overflow: 'hidden' }}>
+      {/* Photo — square, rounded, fills full card width */}
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          aspectRatio: '1 / 1',
+          borderRadius: 'var(--r-card)',
+          marginBottom: 10,
+          outline: highlighted ? '2px solid var(--color-action)' : 'none',
+          outlineOffset: 2,
+        }}
+      >
         <Image
           src={listing.photos[0]}
           alt={listing.title}
           fill
-          sizes="(max-width: 768px) 100vw, 280px"
-          className="object-cover"
+          sizes="(max-width: 640px) calc(50vw - 24px), (max-width: 1024px) calc(33vw - 24px), 310px"
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
         {listing.popularThisWeek && (
           <div
-            className="absolute top-2 left-2 flex items-center gap-1"
+            className="absolute top-2.5 left-2.5 flex items-center gap-1"
             style={{
-              background: 'rgba(0,0,0,0.60)',
+              background: 'rgba(0,0,0,0.58)',
               color: '#FFFFFF',
               fontSize: 'var(--text-xs)',
               fontWeight: 600,
               padding: '3px 8px 3px 6px',
               borderRadius: 'var(--r-badge)',
-              backdropFilter: 'blur(4px)',
+              backdropFilter: 'blur(6px)',
             }}
           >
             <Flame size={11} strokeWidth={2.2} />
             Popular this week
           </div>
         )}
-        <div
-          className="absolute top-2 right-2 flex items-center"
-          style={{
-            background: 'rgba(255,255,255,0.92)',
-            color: '#525252',
-            fontSize: 'var(--text-xs)',
-            fontWeight: 500,
-            padding: '3px 8px',
-            borderRadius: 'var(--r-badge)',
-            backdropFilter: 'blur(4px)',
-          }}
-        >
-          {category.emoji} {category.label}
-        </div>
       </div>
 
-      {/* Content */}
-      <div style={{ padding: 'var(--card-padding)' }}>
+      {/* Text — no background, sits on page bg */}
+      <div style={{ paddingLeft: 2, paddingRight: 2 }}>
+        {/* Neighbourhood + rating */}
+        <div className="flex items-center justify-between" style={{ marginBottom: 3 }}>
+          <span
+            className="truncate"
+            style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginRight: 8 }}
+          >
+            {listing.neighbourhood}
+          </span>
+          <span className="flex items-center shrink-0" style={{ gap: 3 }}>
+            <Star size={11} fill="var(--color-star)" stroke="none" />
+            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--color-text)' }}>
+              {listing.lister.rating.toFixed(1)}
+            </span>
+          </span>
+        </div>
+
         {/* Title */}
-        <h3
-          className="font-[family-name:var(--font-serif)] line-clamp-2"
+        <p
+          className="line-clamp-1"
           style={{
-            fontSize: 'var(--text-md)',
-            color: '#0F0F0E',
-            fontWeight: 500,
+            fontSize: 'var(--text-sm)',
+            color: 'var(--color-text)',
             lineHeight: 'var(--leading-snug)',
-            letterSpacing: 'var(--tracking-serif)',
-            marginBottom: 'var(--row-gap)',
+            marginBottom: 3,
           }}
         >
           {listing.title}
-        </h3>
+        </p>
 
-        {/* Price + neighbourhood */}
-        <div
-          className="flex items-baseline justify-between gap-2"
-          style={{ marginBottom: 'var(--row-gap)' }}
-        >
-          <div className="flex items-baseline gap-1.5">
-            <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--color-price)' }}>
-              ${listing.dailyRate}
-            </span>
-            <span style={{ fontSize: 'var(--text-xs)', color: '#737373' }}>/day</span>
-            {listing.weeklyRate && (
-              <span style={{ fontSize: 'var(--text-xs)', color: '#525252' }}>
-                · ${listing.weeklyRate}/wk
-              </span>
-            )}
-          </div>
-          <span
-            className="shrink-0 flex items-center gap-0.5"
-            style={{ fontSize: 'var(--text-xs)', color: '#737373', whiteSpace: 'nowrap' }}
-          >
-            <MapPin size={10} strokeWidth={2} />
-            {listing.neighbourhood}
-          </span>
-        </div>
-
-        {/* Lister row */}
-        <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: 'var(--row-gap)' }}>
-          <div
-            className="relative rounded-full overflow-hidden shrink-0"
-            style={{ width: 'var(--avatar-card)', height: 'var(--avatar-card)' }}
-          >
-            <Image
-              src={listing.lister.avatar}
-              alt={listing.lister.firstName}
-              fill
-              sizes="28px"
-              className="object-cover"
-            />
-          </div>
-          <span style={{ fontSize: 'var(--text-sm)', color: '#525252' }}>{listing.lister.firstName}</span>
-          {listing.lister.verified && <TrustBadge variant="verified" size="sm" />}
-          <span
-            className="flex items-center gap-0.5 ml-auto"
-            style={{ fontSize: 'var(--text-sm)', color: '#0F0F0E', fontWeight: 500 }}
-          >
-            <Star size={11} fill="var(--color-star)" stroke="none" />
-            {listing.lister.rating.toFixed(1)}
-            <span style={{ color: '#737373', fontWeight: 400, marginLeft: 2 }}>
-              ({listing.lister.reviewCount})
-            </span>
-          </span>
-        </div>
-
-        {/* Label row */}
-        {(label || listing.availableWeekends) && (
-          <div className="flex items-center gap-1.5 flex-wrap" style={{ marginBottom: 'var(--row-gap)' }}>
-            {label && (
-              <TrustBadge
-                variant={
-                  label === 'Community favourite'
-                    ? 'community'
-                    : label === 'Established'
-                    ? 'established'
-                    : 'trusted'
-                }
-                size="sm"
-              />
-            )}
-            {listing.availableWeekends && (
-              <span
-                style={{
-                  fontSize: 'var(--text-xs)',
-                  color: 'var(--color-signal)',
-                  background: 'var(--color-signal-tint)',
-                  padding: '2px 7px',
-                  borderRadius: 'var(--r-badge)',
-                  fontWeight: 500,
-                }}
-              >
-                Weekends available
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Response time */}
-        <div
-          className="flex items-center gap-1"
-          style={{
-            paddingTop: 'var(--row-gap)',
-            borderTop: '1px solid rgba(0,0,0,0.06)',
-            color: 'var(--color-neutral-icon)',
-            fontSize: 'var(--text-xs)',
-          }}
-        >
-          <Clock size={10} strokeWidth={2} />
-          {listing.lister.responseTime}
-        </div>
+        {/* Price */}
+        <p style={{ fontSize: 'var(--text-sm)' }}>
+          <span style={{ fontWeight: 600, color: 'var(--color-text)' }}>${listing.dailyRate}</span>
+          <span style={{ color: 'var(--color-text-muted)' }}> /day</span>
+        </p>
       </div>
     </Link>
   );
