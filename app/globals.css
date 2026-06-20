@@ -136,7 +136,7 @@
   /* ---- Semantic tokens (reference primitives above) ---- */
 
   /* Layout rhythm */
-  --nav-h:              56px;
+  --nav-h:              80px;     /* Airbnb-matched header height */
   --card-padding:       var(--space-5);
   --card-gap:           var(--space-5);
   --row-gap:            var(--space-2);
@@ -145,8 +145,11 @@
   /* Page layout — apply to every full-width content section */
   --page-max-w:         1440px;   /* browse/grid pages */
   --page-max-w-content: 1024px;   /* detail/content pages */
-  --page-pad-x:         clamp(16px, 4vw, 48px);  /* 16px mobile → 48px desktop */
+  --page-pad-x:         clamp(16px, 5vw, 80px);  /* 16px mobile → 80px desktop (Airbnb-matched) */
   --hero-max-w:         560px;    /* constrained hero text + search inputs */
+
+  /* Header */
+  --color-header-bg:    #FFFFFF;  /* pure white — contrasts against --brand-bg (#FAFAF8) page bg */
 
   /* Avatar sizes */
   --avatar-inline: 20px;
