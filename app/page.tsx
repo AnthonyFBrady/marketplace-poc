@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { LISTINGS } from '@/lib/listings';
@@ -14,24 +15,49 @@ const pageWrap: React.CSSProperties = {
   paddingRight: 'var(--page-pad-x)',
 };
 
-const HOME_SECTIONS = [
-  { jobId: 'home-reno',      displayCategories: ['tools'],                      max: 4 },
-  { jobId: 'backyard-party', displayCategories: ['party'],                      max: 4 },
-  { jobId: 'camping-trip',   displayCategories: ['camping'],                    max: 4 },
-  { jobId: 'music-events',   displayCategories: ['instruments', 'electronics'], max: 4 },
-  { jobId: 'get-moving',     displayCategories: ['sports'],                     max: 4 },
+type Section = {
+  jobId: string;
+  displayCategories: string[];
+  offset?: number;
+};
+
+const HOME_SECTIONS: Section[] = [
+  { jobId: 'home-reno',      displayCategories: ['tools']                      },
+  { jobId: 'backyard-party', displayCategories: ['party']                      },
+  { jobId: 'camping-trip',   displayCategories: ['camping']                    },
+  { jobId: 'music-events',   displayCategories: ['instruments', 'electronics'] },
+  { jobId: 'get-moving',     displayCategories: ['sports']                     },
+  { jobId: 'spring-clean',   displayCategories: ['tools'],          offset: 3  },
+  { jobId: 'host-a-show',    displayCategories: ['electronics', 'party']       },
 ];
 
 export default function HomePage() {
+  const [sectionsVisible, setSectionsVisible] = useState(2);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (sectionsVisible >= HOME_SECTIONS.length) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSectionsVisible(v => Math.min(v + 2, HOME_SECTIONS.length));
+        }
+      },
+      { rootMargin: '400px' }
+    );
+    if (sentinelRef.current) obs.observe(sentinelRef.current);
+    return () => obs.disconnect();
+  }, [sectionsVisible]);
+
   return (
     <div style={{ background: 'var(--brand-bg)', minHeight: 'calc(100dvh - var(--nav-h))', paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-12)' }}>
-      {HOME_SECTIONS.map(({ jobId, displayCategories, max }) => {
-        const job = JOBS.find((j) => j.id === jobId);
+      {HOME_SECTIONS.slice(0, sectionsVisible).map(({ jobId, displayCategories, offset = 0 }) => {
+        const job = JOBS.find(j => j.id === jobId);
         if (!job) return null;
 
         const sectionListings = LISTINGS
-          .filter((l) => displayCategories.includes(l.category))
-          .slice(0, max);
+          .filter(l => displayCategories.includes(l.category))
+          .slice(offset);
 
         if (sectionListings.length === 0) return null;
 
@@ -75,7 +101,7 @@ export default function HomePage() {
                 className="grid"
                 style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--space-4)' }}
               >
-                {sectionListings.map((l) => (
+                {sectionListings.map(l => (
                   <ListingCard key={l.id} listing={l} />
                 ))}
               </div>
@@ -83,6 +109,11 @@ export default function HomePage() {
           </div>
         );
       })}
+
+      {/* Sentinel — triggers loading the next batch of sections */}
+      {sectionsVisible < HOME_SECTIONS.length && (
+        <div ref={sentinelRef} style={{ height: 1 }} />
+      )}
     </div>
   );
 }

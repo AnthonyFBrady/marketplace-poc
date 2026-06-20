@@ -4,6 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Flame } from 'lucide-react';
 import { Listing } from '@/lib/listings';
+import { distanceKm } from '@/lib/utils';
+
+const TORONTO = { lat: 43.6532, lng: -79.3832 };
 
 type Props = {
   listing: Listing;
@@ -12,6 +15,9 @@ type Props = {
 };
 
 export function ListingCard({ listing, highlighted, onHover }: Props) {
+  const d = distanceKm(TORONTO.lat, TORONTO.lng, listing.lat, listing.lng);
+  const distStr = d < 1 ? '<1 km' : `${d.toFixed(1)} km`;
+
   return (
     <Link
       href={`/items/${listing.slug}`}
@@ -59,13 +65,13 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
 
       {/* Text — no background, sits on page bg */}
       <div style={{ paddingLeft: 2, paddingRight: 2 }}>
-        {/* Neighbourhood + rating */}
+        {/* Neighbourhood + distance + rating */}
         <div className="flex items-center justify-between" style={{ marginBottom: 3 }}>
           <span
             className="truncate"
             style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginRight: 8 }}
           >
-            {listing.neighbourhood}
+            {listing.neighbourhood} · {distStr}
           </span>
           <span className="flex items-center shrink-0" style={{ gap: 3 }}>
             <Star size={11} fill="var(--color-star)" stroke="none" />
