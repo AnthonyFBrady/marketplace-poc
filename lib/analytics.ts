@@ -6,7 +6,8 @@ export type AnalyticsEvent =
   | 'filter_applied'
   | 'map_pin_clicked'
   | 'gallery_opened'
-  | 'search_used';
+  | 'search_used'
+  | 'nav_search_pill_clicked';
 
 export function track(
   event: AnalyticsEvent,

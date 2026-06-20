@@ -9,6 +9,12 @@ import { Logo } from '@/components/Logo';
 import { useToast } from '@/components/ToastProvider';
 import { track } from '@/lib/analytics';
 
+function navMaxWidth(pathname: string): string {
+  if (pathname === '/search') return 'none';
+  if (pathname.startsWith('/items/') || pathname.startsWith('/rent/')) return 'var(--page-max-w-content)';
+  return 'var(--page-max-w)';
+}
+
 export function Nav() {
   const { show } = useToast();
   const pathname = usePathname();
@@ -44,7 +50,7 @@ export function Nav() {
         className="flex items-center justify-between"
         style={{
           position: 'relative',
-          maxWidth: 'var(--page-max-w)',
+          maxWidth: navMaxWidth(pathname),
           margin: '0 auto',
           height: 'var(--nav-h)',
           paddingLeft: 'var(--page-pad-x)',
