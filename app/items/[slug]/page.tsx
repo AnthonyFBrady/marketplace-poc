@@ -5,7 +5,7 @@ import { ListingGallery } from '@/components/ListingGallery';
 import { ListerProfile } from '@/components/ListerProfile';
 import { TrustBadge } from '@/components/TrustBadge';
 import { BookingPanel } from '@/components/BookingPanel';
-import { MapPin, AlertCircle, X, Check, ArrowLeft } from 'lucide-react';
+import { MapPin, AlertCircle, X, Check, ArrowLeft, Map } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -81,6 +81,14 @@ export default async function ListingPage({ params }: Props) {
                   <MapPin size={13} strokeWidth={2} />
                   {listing.neighbourhood}, Toronto
                 </span>
+                <Link
+                  href={`/search?category=${listing.category}`}
+                  className="flex items-center gap-1 text-sm transition-opacity hover:opacity-70"
+                  style={{ color: 'var(--color-action)' }}
+                >
+                  <Map size={13} strokeWidth={2} />
+                  View on map
+                </Link>
                 {listing.popularThisWeek && <TrustBadge variant="popular" size="md" />}
               </div>
 
