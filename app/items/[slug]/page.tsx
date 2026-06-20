@@ -53,7 +53,7 @@ export default async function ListingPage({ params }: Props) {
 
   return (
     <div style={{ background: 'var(--brand-bg)', minHeight: '100vh' }}>
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main style={{ maxWidth: 'var(--page-max-w-content)', margin: '0 auto', paddingLeft: 'var(--page-pad-x)', paddingRight: 'var(--page-pad-x)', paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
         {/* Back link */}
         <Link
           href="/"

@@ -108,6 +108,7 @@
   --text-md:   17px;
   --text-lg:   22px;
   --text-xl:   28px;
+  --text-2xl:  34px;
 
   /* Line heights */
   --leading-tight:   1.25;
@@ -135,11 +136,17 @@
   /* ---- Semantic tokens (reference primitives above) ---- */
 
   /* Layout rhythm */
-  --nav-h:        56px;
-  --card-padding: var(--space-5);
-  --card-gap:     var(--space-5);
-  --row-gap:      var(--space-2);
-  --section-gap:  var(--space-12);
+  --nav-h:              56px;
+  --card-padding:       var(--space-5);
+  --card-gap:           var(--space-5);
+  --row-gap:            var(--space-2);
+  --section-gap:        var(--space-12);
+
+  /* Page layout — apply to every full-width content section */
+  --page-max-w:         1280px;   /* browse/grid pages */
+  --page-max-w-content: 1024px;   /* detail/content pages */
+  --page-pad-x:         clamp(16px, 4vw, 48px);  /* 16px mobile → 48px desktop */
+  --hero-max-w:         560px;    /* constrained hero text + search inputs */
 
   /* Avatar sizes */
   --avatar-inline: 20px;

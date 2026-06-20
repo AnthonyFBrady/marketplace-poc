@@ -24,6 +24,13 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
+const pageWrap: React.CSSProperties = {
+  maxWidth: 'var(--page-max-w-content)',
+  margin: '0 auto',
+  paddingLeft: 'var(--page-pad-x)',
+  paddingRight: 'var(--page-pad-x)',
+};
+
 export default async function CategoryCityPage({ params }: Props) {
   const { category, city } = await params;
 
@@ -35,47 +42,46 @@ export default async function CategoryCityPage({ params }: Props) {
   const cityLabel = city.charAt(0).toUpperCase() + city.slice(1);
 
   return (
-    <div style={{ background: '#FAFAF8', minHeight: '100vh' }}>
-      {/* Nav */}
-      <header
-        className="sticky top-0 z-40 flex items-center gap-3 px-5 py-3"
-        style={{ background: '#FAFAF8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
-      >
-        <Link
-          href="/"
-          className="font-[family-name:var(--font-serif)]"
-          style={{ fontSize: 20, fontWeight: 600, color: '#2D6A4F', letterSpacing: '-0.02em' }}
-        >
-          Borrow
-        </Link>
-      </header>
+    <div style={{ background: 'var(--brand-bg)', minHeight: '100vh' }}>
+      <main style={{ ...pageWrap, paddingTop: 'var(--space-10)', paddingBottom: 'var(--space-10)' }}>
 
-      <main className="max-w-5xl mx-auto px-4 py-10">
         {/* Hero */}
-        <div className="mb-10">
-          <div className="text-4xl mb-3">{cat.emoji}</div>
+        <div style={{ marginBottom: 'var(--space-10)' }}>
+          <div style={{ fontSize: 'var(--text-2xl)', marginBottom: 'var(--space-3)' }}>{cat.emoji}</div>
           <h1
             className="font-[family-name:var(--font-serif)]"
-            style={{ fontSize: 34, fontWeight: 600, color: '#0F0F0E', marginBottom: 10 }}
+            style={{
+              fontSize: 'var(--text-2xl)',
+              fontWeight: 600,
+              color: 'var(--color-text)',
+              marginBottom: 'var(--space-3)',
+              letterSpacing: 'var(--tracking-serif)',
+              lineHeight: 'var(--leading-snug)',
+            }}
           >
             Rent {cat.label.toLowerCase()} in {cityLabel}
           </h1>
-          <p style={{ fontSize: 16, color: '#525252', maxWidth: 560, lineHeight: 1.7 }}>
+          <p style={{ fontSize: 'var(--text-base)', color: 'var(--color-text-muted)', maxWidth: 'var(--hero-max-w)', lineHeight: 'var(--leading-relaxed)' }}>
             Borrow {cat.label.toLowerCase()} from verified neighbours in {cityLabel}. No membership.
             No long-term commitment. Just the stuff you need, when you need it.
           </p>
         </div>
 
         {/* Category nav */}
-        <div className="flex gap-2 overflow-x-auto mb-8 no-scrollbar">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar" style={{ marginBottom: 'var(--space-8)' }}>
           {CATEGORIES.map((c) => (
             <Link
               key={c.id}
               href={`/rent/${c.id}/${city}`}
-              className="flex items-center gap-1.5 shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-all"
+              className="flex items-center gap-1.5 shrink-0 transition-all"
               style={{
-                background: c.id === category ? '#2D6A4F' : 'white',
-                color: c.id === category ? 'white' : '#0F0F0E',
+                height: 'var(--btn-h-sm)',
+                padding: '0 14px',
+                borderRadius: 'var(--r-badge)',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 500,
+                background: c.id === category ? 'var(--color-action)' : '#FFFFFF',
+                color: c.id === category ? '#FFFFFF' : 'var(--color-text)',
                 border: c.id === category ? 'none' : '1px solid rgba(0,0,0,0.12)',
               }}
             >
@@ -85,12 +91,12 @@ export default async function CategoryCityPage({ params }: Props) {
         </div>
 
         {/* Results count */}
-        <p style={{ fontSize: 14, color: '#737373', marginBottom: 20 }}>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-faint)', marginBottom: 'var(--space-5)' }}>
           {listings.length} {cat.label.toLowerCase()} available in {cityLabel}
         </p>
 
         {/* Listings grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" style={{ marginBottom: 'var(--section-gap)' }}>
           {listings.map((l) => (
             <ListingCard key={l.id} listing={l} />
           ))}
@@ -99,11 +105,11 @@ export default async function CategoryCityPage({ params }: Props) {
         {/* How it works */}
         <div
           className="rounded-2xl p-8"
-          style={{ background: '#F2F2EF', borderTop: '3px solid #2D6A4F' }}
+          style={{ background: 'var(--brand-surface)', borderTop: '3px solid var(--color-action)' }}
         >
           <h2
             className="font-[family-name:var(--font-serif)]"
-            style={{ fontSize: 22, fontWeight: 600, color: '#0F0F0E', marginBottom: 24 }}
+            style={{ fontSize: 'var(--h2-size)', fontWeight: 600, color: 'var(--color-text)', marginBottom: 'var(--space-6)' }}
           >
             How Borrow works
           </h2>
@@ -122,24 +128,25 @@ export default async function CategoryCityPage({ params }: Props) {
               {
                 step: '03',
                 title: 'Pick up and go',
-                desc: 'Meet your neighbour, pick up the item, and return it when you\'re done. Leave a review to help the community.',
+                desc: "Meet your neighbour, pick up the item, and return it when you're done. Leave a review to help the community.",
               },
             ].map(({ step, title, desc }) => (
               <div key={step}>
                 <div
                   className="font-[family-name:var(--font-serif)]"
-                  style={{ fontSize: 32, fontWeight: 700, color: '#2D6A4F', opacity: 0.4, marginBottom: 8 }}
+                  style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--color-action)', opacity: 0.4, marginBottom: 'var(--space-2)' }}
                 >
                   {step}
                 </div>
-                <h3 style={{ fontSize: 15, fontWeight: 600, color: '#0F0F0E', marginBottom: 6 }}>
+                <h3 style={{ fontSize: 'var(--h4-size)', fontWeight: 600, color: 'var(--color-text)', marginBottom: 'var(--space-1)' }}>
                   {title}
                 </h3>
-                <p style={{ fontSize: 14, color: '#525252', lineHeight: 1.65 }}>{desc}</p>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', lineHeight: 'var(--leading-normal)' }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
+
       </main>
     </div>
   );
