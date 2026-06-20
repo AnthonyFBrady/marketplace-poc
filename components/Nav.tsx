@@ -16,6 +16,8 @@ function navMaxWidth(pathname: string): string {
   return 'var(--page-max-w)';
 }
 
+const CHIP_DUET = [...JOBS, ...JOBS];
+
 export function Nav() {
   const { show } = useToast();
   const router = useRouter();
@@ -24,8 +26,9 @@ export function Nav() {
 
   const [scrolled, setScrolled] = useState(false);
   const [pillVisible, setPillVisible] = useState(false);
+  const [query, setQuery] = useState('');
 
-  const chipsOpen = isHome && !scrolled;
+  const expandedOpen = isHome && !scrolled;
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,6 +45,14 @@ export function Nav() {
     setPillVisible(false);
   }, [pathname]);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (query.trim()) params.set('q', query);
+    track('search_used', { query, category: 'all' });
+    router.push(`/search?${params.toString()}`);
+  };
+
   return (
     <header
       className="sticky top-0 z-40 shrink-0"
@@ -52,7 +63,7 @@ export function Nav() {
         transition: 'box-shadow 0.4s ease',
       }}
     >
-      {/* Row 1: logo + actions */}
+      {/* Row 1: logo + compact pill + actions */}
       <div
         className="flex items-center justify-between"
         style={{
@@ -66,7 +77,7 @@ export function Nav() {
       >
         <Link href="/"><Logo size="md" /></Link>
 
-        {/* Compact search pill — appears after scrolling past hero */}
+        {/* Compact search pill — appears after scrolling on homepage */}
         <button
           className="absolute left-1/2 flex items-center gap-2"
           style={{
@@ -141,34 +152,42 @@ export function Nav() {
         </div>
       </div>
 
-      {/* Row 2: job discovery chips — homepage only, collapses on scroll */}
+      {/* Expandable section: chip marquee + search bar (homepage only, collapses on scroll) */}
       {isHome && (
         <div
           style={{
             overflow: 'hidden',
-            maxHeight: chipsOpen ? '52px' : '0',
-            opacity: chipsOpen ? 1 : 0,
-            transition: 'max-height 280ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 240ms ease',
-            pointerEvents: chipsOpen ? 'auto' : 'none',
+            maxHeight: expandedOpen ? '116px' : '0',
+            opacity: expandedOpen ? 1 : 0,
+            transition: 'max-height 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 260ms ease',
+            pointerEvents: expandedOpen ? 'auto' : 'none',
           }}
         >
-          <div
-            style={{
-              maxWidth: navMaxWidth(pathname),
-              margin: '0 auto',
-              paddingLeft: 'var(--page-pad-x)',
-              paddingRight: 'var(--page-pad-x)',
-            }}
-          >
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar" style={{ height: 52 }}>
-              {JOBS.map((job) => (
+          {/* Job chip marquee */}
+          <div style={{ height: 52, display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-2)',
+                width: 'max-content',
+                paddingLeft: 'var(--space-2)',
+                animation: 'marquee 28s linear infinite',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.animationPlayState = 'paused';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.animationPlayState = 'running';
+              }}
+            >
+              {CHIP_DUET.map((job, i) => (
                 <button
-                  key={job.id}
+                  key={`${job.id}-${i}`}
                   onClick={() => {
                     track('job_chip_clicked', { job: job.id });
                     router.push(`/search?job=${job.id}`);
                   }}
-                  className="flex items-center gap-2 shrink-0 transition-colors duration-150 hover:border-[rgba(0,0,0,0.24)]"
                   style={{
                     height: 'var(--btn-h-sm)',
                     padding: '0 14px',
@@ -180,6 +199,10 @@ export function Nav() {
                     color: 'var(--color-text)',
                     border: '1px solid rgba(0,0,0,0.12)',
                     whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    flexShrink: 0,
                   }}
                 >
                   <span style={{ fontSize: 18, lineHeight: 1 }}>{job.emoji}</span>
@@ -187,6 +210,86 @@ export function Nav() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Search bar */}
+          <div
+            style={{
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: 'var(--page-pad-x)',
+              paddingRight: 'var(--page-pad-x)',
+            }}
+          >
+            <form
+              onSubmit={handleSearch}
+              style={{
+                width: '100%',
+                maxWidth: 'var(--hero-max-w)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-2)',
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--space-2)',
+                  padding: '0 var(--space-4)',
+                  height: 44,
+                  background: '#FFFFFF',
+                  border: '1.5px solid rgba(0,0,0,0.12)',
+                  borderRadius: 'var(--r-badge)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                }}
+              >
+                <Search size={15} strokeWidth={2} style={{ color: 'var(--color-text-faint)', flexShrink: 0 }} />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="What do you want to borrow?"
+                  style={{
+                    flex: 1,
+                    background: 'transparent',
+                    outline: 'none',
+                    fontSize: 'var(--text-base)',
+                    color: 'var(--color-text)',
+                    border: 'none',
+                  }}
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery('')}
+                    style={{ color: 'var(--color-text-faint)', fontSize: 16, flexShrink: 0, lineHeight: 1, cursor: 'pointer', background: 'none', border: 'none' }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+              <button
+                type="submit"
+                style={{
+                  height: 44,
+                  padding: '0 var(--space-5)',
+                  borderRadius: 'var(--r-badge)',
+                  background: 'var(--color-action)',
+                  color: '#FFFFFF',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  border: 'none',
+                }}
+              >
+                Search
+              </button>
+            </form>
           </div>
         </div>
       )}
