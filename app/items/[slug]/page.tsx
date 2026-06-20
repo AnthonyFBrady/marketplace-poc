@@ -83,7 +83,7 @@ export default async function ListingPage({ params }: Props) {
 
               <h1
                 className="font-[family-name:var(--font-serif)] leading-snug mb-4"
-                style={{ fontSize: 26, fontWeight: 600, color: '#0F0F0E' }}
+                style={{ fontSize: 'var(--text-xl)', fontWeight: 600, color: '#0F0F0E' }}
               >
                 {listing.title}
               </h1>
@@ -103,7 +103,7 @@ export default async function ListingPage({ params }: Props) {
               </h2>
               <ul className="flex flex-col gap-2">
                 {listing.rules.map((rule, i) => (
-                  <li key={i} className="flex items-start gap-2" style={{ fontSize: 14, color: '#525252' }}>
+                  <li key={i} className="flex items-start gap-2" style={{ fontSize: 'var(--text-base)', color: '#525252' }}>
                     <AlertCircle size={14} strokeWidth={2} style={{ color: '#D4900F', marginTop: 3, flexShrink: 0 }} />
                     {rule}
                   </li>
@@ -131,13 +131,13 @@ export default async function ListingPage({ params }: Props) {
               style={{ background: 'rgba(45,106,79,0.06)', border: '1px solid rgba(45,106,79,0.12)' }}
             >
               <summary
-                style={{ fontSize: 14, fontWeight: 600, color: '#2D6A4F', listStyle: 'none' }}
+                style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: '#2D6A4F', listStyle: 'none' }}
                 className="flex items-center justify-between"
               >
                 How rental protection works
                 <span style={{ fontSize: 12, fontWeight: 400 }}>+</span>
               </summary>
-              <p style={{ fontSize: 14, color: '#525252', lineHeight: 1.7, marginTop: 10 }}>
+              <p style={{ fontSize: 'var(--text-base)', color: '#525252', lineHeight: 'var(--leading-relaxed)', marginTop: 10 }}>
                 Borrow holds a refundable security deposit from renters at the time of booking. If the
                 item is returned undamaged, the deposit is released within 48 hours. If there is a
                 dispute, our team reviews photo evidence from both parties and mediates a fair resolution.

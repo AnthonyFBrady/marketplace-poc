@@ -16,7 +16,7 @@ export function ListerProfile({ lister }: Props) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start gap-3 mb-4">
+      <div className="flex items-start gap-3" style={{ marginBottom: 'var(--space-4)' }}>
         <div
           className="relative rounded-full overflow-hidden shrink-0"
           style={{ width: 56, height: 56, border: '2px solid rgba(0,0,0,0.08)' }}
@@ -32,17 +32,17 @@ export function ListerProfile({ lister }: Props) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span style={{ fontSize: 16, fontWeight: 600, color: '#0F0F0E' }}>
+            <span style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: '#0F0F0E' }}>
               {lister.name}
             </span>
             {lister.verified && <TrustBadge variant="verified" size="md" />}
           </div>
-          <div style={{ fontSize: 13, color: '#525252', marginTop: 2 }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: '#525252', marginTop: 2 }}>
             Member since {lister.memberSince}
           </div>
           <div
-            className="flex items-center gap-3 mt-1 flex-wrap"
-            style={{ fontSize: 13, color: '#525252' }}
+            className="flex items-center gap-3 flex-wrap"
+            style={{ fontSize: 'var(--text-sm)', color: '#525252', marginTop: 4 }}
           >
             <span>{lister.completedRentals} completed rentals</span>
             <span
@@ -62,29 +62,31 @@ export function ListerProfile({ lister }: Props) {
 
       {/* Badges row */}
       {reviewBadge && (
-        <div className="mb-3">
+        <div style={{ marginBottom: 'var(--space-3)' }}>
           <TrustBadge variant={reviewBadge} size="md" />
         </div>
       )}
 
       {/* Bio */}
-      <p style={{ fontSize: 14, color: '#525252', lineHeight: 1.65, marginBottom: 12 }}>
+      <p style={{ fontSize: 'var(--text-base)', color: '#525252', lineHeight: 'var(--leading-normal)', marginBottom: 'var(--space-3)' }}>
         {lister.bio}
       </p>
 
       {/* Stats */}
       <div
-        className="flex items-center gap-4 flex-wrap py-3 mb-4"
+        className="flex items-center gap-4 flex-wrap"
         style={{
           borderTop: '1px solid rgba(0,0,0,0.08)',
           borderBottom: '1px solid rgba(0,0,0,0.08)',
+          padding: 'var(--space-3) 0',
+          marginBottom: 'var(--space-4)',
         }}
       >
-        <div className="flex items-center gap-1.5" style={{ fontSize: 13, color: '#525252' }}>
+        <div className="flex items-center gap-1.5" style={{ fontSize: 'var(--text-sm)', color: '#525252' }}>
           <Clock size={13} strokeWidth={2} style={{ color: '#2D6A4F' }} />
           {lister.responseTime}
         </div>
-        <div className="flex items-center gap-1.5" style={{ fontSize: 13, color: '#525252' }}>
+        <div className="flex items-center gap-1.5" style={{ fontSize: 'var(--text-sm)', color: '#525252' }}>
           <CheckCircle size={13} strokeWidth={2} style={{ color: '#2D6A4F' }} />
           {lister.responseRate}% response rate
         </div>
@@ -92,14 +94,14 @@ export function ListerProfile({ lister }: Props) {
 
       {/* Reviews */}
       {lister.reviews.length > 0 && (
-        <div className="mb-4">
-          <h4 style={{ fontSize: 14, fontWeight: 600, color: '#0F0F0E', marginBottom: 10 }}>
+        <div style={{ marginBottom: 'var(--space-4)' }}>
+          <h4 style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: '#0F0F0E', marginBottom: 'var(--space-3)' }}>
             What renters say
           </h4>
           <div className="flex flex-col gap-4">
             {lister.reviews.slice(0, 2).map((review, i) => (
               <div key={i}>
-                <div className="flex items-center gap-2 mb-1.5">
+                <div className="flex items-center gap-2" style={{ marginBottom: 'var(--space-2)' }}>
                   <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0">
                     <Image
                       src={review.avatar}
@@ -110,20 +112,20 @@ export function ListerProfile({ lister }: Props) {
                       unoptimized
                     />
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: '#0F0F0E' }}>
+                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: '#0F0F0E' }}>
                     {review.author}
                   </span>
-                  <span style={{ fontSize: 12, color: '#737373' }}>{review.date}</span>
+                  <span style={{ fontSize: 'var(--text-xs)', color: '#737373' }}>{review.date}</span>
                   <span
                     className="ml-auto flex items-center gap-0.5"
-                    style={{ fontSize: 12, color: '#0F0F0E' }}
+                    style={{ fontSize: 'var(--text-xs)', color: '#0F0F0E' }}
                   >
                     {Array.from({ length: review.rating }).map((_, s) => (
                       <Star key={s} size={10} fill="#D4900F" stroke="none" />
                     ))}
                   </span>
                 </div>
-                <p style={{ fontSize: 13, color: '#525252', lineHeight: 1.6 }}>
+                <p style={{ fontSize: 'var(--text-sm)', color: '#525252', lineHeight: 'var(--leading-normal)' }}>
                   {review.text}
                 </p>
               </div>
@@ -134,11 +136,14 @@ export function ListerProfile({ lister }: Props) {
 
       {/* Message CTA */}
       <button
-        className="flex items-center gap-2 w-full justify-center rounded-xl py-2.5 text-sm font-medium transition-colors"
+        className="flex items-center gap-2 w-full justify-center font-medium transition-colors"
         style={{
+          height: 'var(--btn-h)',
+          borderRadius: 'var(--r-badge)',
           border: '1.5px solid #2D6A4F',
           color: '#2D6A4F',
           background: 'transparent',
+          fontSize: 'var(--text-sm)',
         }}
         onClick={() => alert('Messaging is coming soon. This is a POC.')}
       >

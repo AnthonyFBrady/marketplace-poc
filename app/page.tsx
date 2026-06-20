@@ -85,8 +85,14 @@ export default function HomePage() {
             {filtered.length} items near you
           </span>
           <button
-            className="text-sm font-medium px-4 py-1.5 rounded-full transition-opacity hover:opacity-80"
-            style={{ background: '#2D6A4F', color: '#FFFFFF' }}
+            className="font-medium rounded-full transition-opacity hover:opacity-80"
+            style={{
+              height: 'var(--btn-h-sm)',
+              padding: '0 16px',
+              fontSize: 'var(--text-sm)',
+              background: '#2D6A4F',
+              color: '#FFFFFF',
+            }}
             onClick={() => alert('Listing your item is coming soon.')}
           >
             List your gear
@@ -117,7 +123,7 @@ export default function HomePage() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="What do you need?"
                 className="flex-1 bg-transparent outline-none"
-                style={{ fontSize: 14, color: '#0F0F0E' }}
+                style={{ fontSize: 'var(--text-base)', color: '#0F0F0E' }}
               />
               {query && (
                 <button
@@ -191,7 +197,7 @@ export default function HomePage() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="What do you need?"
                 className="flex-1 bg-transparent outline-none"
-                style={{ fontSize: 14, color: '#0F0F0E' }}
+                style={{ fontSize: 'var(--text-base)', color: '#0F0F0E' }}
               />
               {query && (
                 <button onClick={() => setQuery('')} style={{ color: '#737373', fontSize: 16 }}>
