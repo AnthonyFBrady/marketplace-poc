@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { track } from '@/lib/analytics';
 
 type Props = {
   photos: string[];
@@ -27,7 +28,10 @@ export function ListingGallery({ photos, title }: Props) {
           priority
           sizes="(max-width: 768px) 100vw, 60vw"
           className="object-cover cursor-zoom-in"
-          onClick={() => setLightbox(true)}
+          onClick={() => {
+            track('gallery_opened', { photo_count: photos.length });
+            setLightbox(true);
+          }}
         />
 
         {/* Nav buttons */}

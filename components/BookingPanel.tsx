@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Listing } from '@/lib/listings';
 import { ListerProfile } from '@/components/ListerProfile';
 import { useToast } from '@/components/ToastProvider';
+import { track } from '@/lib/analytics';
 
 type Props = {
   listing: Listing;
@@ -10,6 +12,10 @@ type Props = {
 
 export function BookingPanel({ listing }: Props) {
   const { show } = useToast();
+
+  useEffect(() => {
+    track('listing_viewed', { listing_id: listing.id, daily_rate: listing.dailyRate });
+  }, [listing.id, listing.dailyRate]);
 
   return (
     <div
@@ -75,7 +81,10 @@ export function BookingPanel({ listing }: Props) {
             color: '#FFFFFF',
             fontSize: 'var(--text-base)',
           }}
-          onClick={() => show('Booking is coming soon — Borrow is in early access.')}
+          onClick={() => {
+            track('booking_cta_clicked', { listing_id: listing.id, daily_rate: listing.dailyRate });
+            show('Booking is coming soon — Borrow is in early access.');
+          }}
         >
           Request to Borrow
         </button>

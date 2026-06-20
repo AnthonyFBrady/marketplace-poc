@@ -3,6 +3,7 @@
 import { Marker } from 'react-map-gl/maplibre';
 import Image from 'next/image';
 import { Listing } from '@/lib/listings';
+import { track } from '@/lib/analytics';
 
 type Props = {
   listing: Listing;
@@ -18,6 +19,7 @@ export function ListingPin({ listing, selected, onClick }: Props) {
       anchor="bottom"
       onClick={(e) => {
         e.originalEvent.stopPropagation();
+        track('map_pin_clicked', { listing_id: listing.id });
         onClick(listing);
       }}
     >

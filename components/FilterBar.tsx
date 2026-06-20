@@ -2,7 +2,7 @@
 
 import { ShieldCheck, X } from 'lucide-react';
 import { CATEGORIES, CategoryId } from '@/lib/categories';
-import { cn } from '@/lib/utils';
+import { track } from '@/lib/analytics';
 
 export type Filters = {
   category: CategoryId | null;
@@ -36,10 +36,16 @@ const chipBase: React.CSSProperties = {
 };
 
 export function FilterBar({ filters, onChange }: Props) {
-  const setCategory = (id: CategoryId | null) =>
-    onChange({ ...filters, category: filters.category === id ? null : id });
+  const setCategory = (id: CategoryId | null) => {
+    const next = filters.category === id ? null : id;
+    track('filter_applied', { category: next ?? 'all' });
+    onChange({ ...filters, category: next });
+  };
 
-  const toggleVerified = () => onChange({ ...filters, verifiedOnly: !filters.verifiedOnly });
+  const toggleVerified = () => {
+    track('filter_applied', { verified_only: !filters.verifiedOnly });
+    onChange({ ...filters, verifiedOnly: !filters.verifiedOnly });
+  };
 
   const setDistance = (km: number) => onChange({ ...filters, distanceKm: km });
 
@@ -48,8 +54,8 @@ export function FilterBar({ filters, onChange }: Props) {
 
   return (
     <div
-      className="sticky top-0 z-30"
-      style={{ background: '#FAFAF8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
+      className="shrink-0"
+      style={{ background: 'var(--brand-bg)', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
     >
       <div className="flex items-center gap-2 overflow-x-auto px-4 py-2.5 no-scrollbar">
         {CATEGORIES.map((cat) => {
@@ -60,8 +66,8 @@ export function FilterBar({ filters, onChange }: Props) {
               onClick={() => setCategory(cat.id)}
               style={{
                 ...chipBase,
-                background: active ? '#2D6A4F' : '#FFFFFF',
-                color: active ? '#FFFFFF' : '#0F0F0E',
+                background: active ? 'var(--color-action)' : '#FFFFFF',
+                color: active ? '#FFFFFF' : 'var(--color-text)',
                 border: active ? 'none' : '1px solid rgba(0,0,0,0.12)',
                 boxShadow: active ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
               }}
@@ -72,19 +78,14 @@ export function FilterBar({ filters, onChange }: Props) {
           );
         })}
 
-        {/* Divider */}
-        <div
-          className="shrink-0 w-px h-5 mx-1"
-          style={{ background: 'rgba(0,0,0,0.10)' }}
-        />
+        <div className="shrink-0 w-px h-5 mx-1" style={{ background: 'rgba(0,0,0,0.10)' }} />
 
-        {/* Verified toggle */}
         <button
           onClick={toggleVerified}
           style={{
             ...chipBase,
-            background: filters.verifiedOnly ? '#2D6A4F' : '#FFFFFF',
-            color: filters.verifiedOnly ? '#FFFFFF' : '#525252',
+            background: filters.verifiedOnly ? 'var(--color-action)' : '#FFFFFF',
+            color: filters.verifiedOnly ? '#FFFFFF' : 'var(--color-text-muted)',
             border: filters.verifiedOnly ? 'none' : '1px solid rgba(0,0,0,0.12)',
             boxShadow: filters.verifiedOnly ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
           }}
@@ -93,7 +94,6 @@ export function FilterBar({ filters, onChange }: Props) {
           Verified only
         </button>
 
-        {/* Distance pills */}
         <div className="flex items-center gap-1 shrink-0 ml-1">
           {DISTANCES.map((km) => {
             const active = filters.distanceKm === km;
@@ -112,8 +112,8 @@ export function FilterBar({ filters, onChange }: Props) {
                   fontWeight: 500,
                   transition: 'all 0.15s',
                   cursor: 'pointer',
-                  background: active ? '#0F0F0E' : '#FFFFFF',
-                  color: active ? '#FFFFFF' : '#525252',
+                  background: active ? 'var(--brand-ink)' : '#FFFFFF',
+                  color: active ? '#FFFFFF' : 'var(--color-text-muted)',
                   border: active ? 'none' : '1px solid rgba(0,0,0,0.12)',
                 }}
               >
@@ -123,12 +123,11 @@ export function FilterBar({ filters, onChange }: Props) {
           })}
         </div>
 
-        {/* Clear */}
         {!isDefault(filters) && (
           <button
             onClick={clear}
             className="flex items-center gap-1 shrink-0 font-medium hover:underline"
-            style={{ fontSize: 'var(--text-xs)', color: '#2D6A4F', marginLeft: 8 }}
+            style={{ fontSize: 'var(--text-xs)', color: 'var(--color-action)', marginLeft: 8 }}
           >
             <X size={12} />
             Clear

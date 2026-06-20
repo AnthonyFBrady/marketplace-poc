@@ -21,6 +21,20 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: `${listing.title} — Borrow`,
     description: listing.description,
+    openGraph: {
+      title: `${listing.title} — Borrow`,
+      description: listing.description,
+      images: [{ url: listing.photos[0], width: 1200, height: 630, alt: listing.title }],
+      type: 'website',
+      siteName: 'Borrow',
+      url: `https://borrow-marketplace-poc.netlify.app/items/${listing.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${listing.title} — Borrow`,
+      description: listing.description,
+      images: [listing.photos[0]],
+    },
   };
 }
 

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { useToast } from '@/components/ToastProvider';
+import { track } from '@/lib/analytics';
 
 export function Nav() {
   const { show } = useToast();
@@ -28,7 +29,10 @@ export function Nav() {
           background: 'var(--color-action)',
           color: '#FFFFFF',
         }}
-        onClick={() => show('Listing your gear is coming soon — Borrow is in early access.')}
+        onClick={() => {
+          track('list_gear_clicked');
+          show('Listing your gear is coming soon — Borrow is in early access.');
+        }}
       >
         List your gear
       </button>

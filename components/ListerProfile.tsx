@@ -5,6 +5,7 @@ import { Star, Clock, CheckCircle, MessageCircle } from 'lucide-react';
 import { Lister, getReviewLabel } from '@/lib/listings';
 import { TrustBadge, getReviewBadge } from '@/components/TrustBadge';
 import { useToast } from '@/components/ToastProvider';
+import { track } from '@/lib/analytics';
 
 type Props = {
   lister: Lister;
@@ -169,7 +170,10 @@ export function ListerProfile({ lister }: Props) {
           background: 'transparent',
           fontSize: 'var(--text-sm)',
         }}
-        onClick={() => show(`Messaging is coming soon — Borrow is in early access.`)}
+        onClick={() => {
+          track('message_cta_clicked', { lister: lister.firstName });
+          show(`Messaging is coming soon — Borrow is in early access.`);
+        }}
       >
         <MessageCircle size={15} strokeWidth={2} />
         Message {lister.firstName}

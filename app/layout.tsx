@@ -17,10 +17,24 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
 });
 
+const DESCRIPTION =
+  "Borrow tools, camping gear, party supplies, instruments and more from verified neighbours near you. Canada's neighbourhood rental marketplace.";
+
 export const metadata: Metadata = {
   title: "Borrow — Rent anything from a neighbour in Toronto",
-  description:
-    "Borrow tools, camping gear, party supplies, instruments and more from verified neighbours near you. Canada's neighbourhood rental marketplace.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Borrow — Rent anything from a neighbour in Toronto",
+    description: DESCRIPTION,
+    type: "website",
+    siteName: "Borrow",
+    url: "https://borrow-marketplace-poc.netlify.app",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Borrow — Rent anything from a neighbour in Toronto",
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
