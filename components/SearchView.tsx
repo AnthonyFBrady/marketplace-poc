@@ -27,9 +27,10 @@ export function SearchView() {
 
   const initCategory = (searchParams.get('category') as CategoryId) ?? null;
   const initQuery = searchParams.get('q') ?? '';
-  const initJob = searchParams.get('job') ?? null;
-  const jobDef = initJob ? getJobById(initJob) : null;
-  const jobCategories = jobDef?.categories ?? null;
+
+  // activeJobId is derived from URL on every render so it stays in sync when cleared
+  const activeJobId = searchParams.get('job') ?? null;
+  const jobDef = activeJobId ? getJobById(activeJobId) : null;
 
   const [filters, setFilters] = useState<Filters>({
     category: initCategory,
@@ -41,10 +42,12 @@ export function SearchView() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [query, setQuery] = useState(initQuery);
 
+  // activeJobId in deps ensures filtered recomputes when job is cleared from URL
   const filtered = useMemo(() => {
+    const jobCats = activeJobId ? (getJobById(activeJobId)?.categories ?? null) : null;
     const q = query.toLowerCase().trim();
     return LISTINGS.filter((l) => {
-      if (jobCategories && !jobCategories.includes(l.category)) return false;
+      if (jobCats && !jobCats.includes(l.category)) return false;
       if (filters.category && l.category !== filters.category) return false;
       if (filters.verifiedOnly && !l.lister.verified) return false;
       if (l.dailyRate > filters.maxPrice) return false;
@@ -56,7 +59,7 @@ export function SearchView() {
       }
       return true;
     });
-  }, [filters, query]);
+  }, [filters, query, activeJobId]);
 
   const handleSelect = (listing: Listing | null) => {
     setSelectedId(listing?.id ?? null);
@@ -75,17 +78,30 @@ export function SearchView() {
     router.replace(`/search?${params.toString()}`);
   };
 
+  const handleClearJob = () => {
+    const params = new URLSearchParams();
+    if (query) params.set('q', query);
+    if (filters.category) params.set('category', filters.category);
+    router.replace(`/search?${params.toString()}`);
+  };
+
   return (
     <div className="flex flex-col" style={{ height: 'calc(100dvh - var(--nav-h))', overflow: 'hidden' }}>
-      {/* Filter bar */}
-      <FilterBar filters={filters} onChange={setFilters} />
+      {/* Filter bar — job pill + category chips */}
+      <FilterBar
+        filters={filters}
+        onChange={setFilters}
+        jobLabel={jobDef?.label}
+        jobEmoji={jobDef?.emoji}
+        onClearJob={handleClearJob}
+      />
 
       {/* Main layout */}
       <div className="flex flex-1 overflow-hidden">
-        {/* List panel — desktop */}
+        {/* List panel — desktop, 2-column card grid */}
         <div
           className="hidden md:flex flex-col"
-          style={{ width: 380, borderRight: '1px solid rgba(0,0,0,0.08)', flexShrink: 0 }}
+          style={{ width: 420, borderRight: '1px solid rgba(0,0,0,0.08)', flexShrink: 0 }}
         >
           {/* Back + search */}
           <div className="px-4 pt-3 pb-2 shrink-0 flex flex-col gap-2">
@@ -124,30 +140,14 @@ export function SearchView() {
             </form>
           </div>
 
-          {/* Results count + active job label */}
-          <div className="px-4 pb-2 shrink-0 flex items-center gap-2 flex-wrap">
-            {jobDef && (
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: 'var(--tracking-label)',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-action)',
-                  background: 'var(--color-action-tint)',
-                  padding: '2px 8px',
-                  borderRadius: 'var(--r-badge)',
-                }}
-              >
-                {jobDef.emoji} {jobDef.label}
-              </span>
-            )}
+          {/* Results count */}
+          <div className="px-4 pb-2 shrink-0">
             <span style={{ fontSize: 12, color: 'var(--color-text-faint)' }}>
               {filtered.length} {filtered.length === 1 ? 'item' : 'items'} in Toronto
             </span>
           </div>
 
-          {/* Cards */}
+          {/* Cards — 2 per row */}
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center">
@@ -157,7 +157,10 @@ export function SearchView() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col p-4 pt-1" style={{ gap: 'var(--card-gap)' }}>
+              <div
+                className="grid p-3 pt-1"
+                style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-3)' }}
+              >
                 {filtered.map((l) => (
                   <div key={l.id} id={`card-${l.id}`}>
                     <ListingCard

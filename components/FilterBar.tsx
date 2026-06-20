@@ -14,6 +14,9 @@ export type Filters = {
 type Props = {
   filters: Filters;
   onChange: (filters: Filters) => void;
+  jobLabel?: string;
+  jobEmoji?: string;
+  onClearJob?: () => void;
 };
 
 const DISTANCES = [1, 5, 10, 25] as const;
@@ -35,7 +38,7 @@ const chipBase: React.CSSProperties = {
   cursor: 'pointer',
 };
 
-export function FilterBar({ filters, onChange }: Props) {
+export function FilterBar({ filters, onChange, jobLabel, jobEmoji, onClearJob }: Props) {
   const setCategory = (id: CategoryId | null) => {
     const next = filters.category === id ? null : id;
     track('filter_applied', { category: next ?? 'all' });
@@ -58,6 +61,29 @@ export function FilterBar({ filters, onChange }: Props) {
       style={{ background: 'var(--brand-bg)', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
     >
       <div className="flex items-center gap-2 overflow-x-auto px-4 py-2.5 no-scrollbar">
+        {/* Active job pill — removable */}
+        {jobLabel && onClearJob && (
+          <>
+            <button
+              onClick={onClearJob}
+              style={{
+                ...chipBase,
+                background: 'var(--color-action)',
+                color: '#FFFFFF',
+                border: 'none',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
+                gap: 8,
+                paddingRight: 10,
+              }}
+            >
+              {jobEmoji && <span style={{ fontSize: 13 }}>{jobEmoji}</span>}
+              <span>{jobLabel}</span>
+              <X size={13} strokeWidth={2.5} style={{ opacity: 0.85 }} />
+            </button>
+            <div className="shrink-0 w-px h-5 mx-0.5" style={{ background: 'rgba(0,0,0,0.10)' }} />
+          </>
+        )}
+
         {CATEGORIES.map((cat) => {
           const active = filters.category === cat.id;
           return (

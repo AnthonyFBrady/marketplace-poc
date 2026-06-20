@@ -1,9 +1,10 @@
-type Size = 'sm' | 'md' | 'lg';
+type Size = 'sm' | 'md' | 'lg' | 'xl';
 
 const SIZE: Record<Size, { text: number }> = {
   sm: { text: 16 },
   md: { text: 20 },
   lg: { text: 26 },
+  xl: { text: 32 },
 };
 
 type Props = {

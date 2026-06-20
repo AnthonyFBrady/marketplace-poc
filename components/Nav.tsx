@@ -116,7 +116,7 @@ export function Nav() {
             paddingRight: 'var(--page-pad-x)',
           }}
         >
-          <Link href="/" style={{ flexShrink: 0 }}><Logo size="md" /></Link>
+          <Link href="/" style={{ flexShrink: 0 }}><Logo size="xl" /></Link>
 
           {/* Chips marquee — visible when expanded or search-open */}
           <div
