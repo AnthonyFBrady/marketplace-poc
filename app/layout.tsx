@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
 import { Nav } from "@/components/Nav";
 import { PageTransition } from "@/components/PageTransition";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
 });
 
 const playfair = Playfair_Display({
@@ -45,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-CA"
-      className={`${plusJakartaSans.variable} ${playfair.variable} h-full`}
+      className={`${inter.variable} ${playfair.variable} h-full`}
     >
       <body className="min-h-full flex flex-col font-[family-name:var(--font-sans)]">
         <ToastProvider>

@@ -12,6 +12,7 @@ import { FilterBar, Filters } from '@/components/FilterBar';
 import { distanceKm } from '@/lib/utils';
 import { CategoryId } from '@/lib/categories';
 import { track } from '@/lib/analytics';
+import { getJobById } from '@/lib/jobs';
 
 const MapView = dynamic(() => import('@/components/MapView').then((m) => m.MapView), {
   ssr: false,
@@ -26,6 +27,9 @@ export function SearchView() {
 
   const initCategory = (searchParams.get('category') as CategoryId) ?? null;
   const initQuery = searchParams.get('q') ?? '';
+  const initJob = searchParams.get('job') ?? null;
+  const jobDef = initJob ? getJobById(initJob) : null;
+  const jobCategories = jobDef?.categories ?? null;
 
   const [filters, setFilters] = useState<Filters>({
     category: initCategory,
@@ -40,6 +44,7 @@ export function SearchView() {
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return LISTINGS.filter((l) => {
+      if (jobCategories && !jobCategories.includes(l.category)) return false;
       if (filters.category && l.category !== filters.category) return false;
       if (filters.verifiedOnly && !l.lister.verified) return false;
       if (l.dailyRate > filters.maxPrice) return false;
@@ -119,8 +124,24 @@ export function SearchView() {
             </form>
           </div>
 
-          {/* Results count */}
-          <div className="px-4 pb-2 shrink-0">
+          {/* Results count + active job label */}
+          <div className="px-4 pb-2 shrink-0 flex items-center gap-2 flex-wrap">
+            {jobDef && (
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: 'var(--tracking-label)',
+                  textTransform: 'uppercase',
+                  color: 'var(--color-action)',
+                  background: 'var(--color-action-tint)',
+                  padding: '2px 8px',
+                  borderRadius: 'var(--r-badge)',
+                }}
+              >
+                {jobDef.emoji} {jobDef.label}
+              </span>
+            )}
             <span style={{ fontSize: 12, color: 'var(--color-text-faint)' }}>
               {filtered.length} {filtered.length === 1 ? 'item' : 'items'} in Toronto
             </span>

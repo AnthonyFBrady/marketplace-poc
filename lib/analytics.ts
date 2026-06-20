@@ -7,7 +7,8 @@ export type AnalyticsEvent =
   | 'map_pin_clicked'
   | 'gallery_opened'
   | 'search_used'
-  | 'nav_search_pill_clicked';
+  | 'nav_search_pill_clicked'
+  | 'job_chip_clicked';
 
 export function track(
   event: AnalyticsEvent,

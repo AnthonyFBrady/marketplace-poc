@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, Search } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { useToast } from '@/components/ToastProvider';
 import { track } from '@/lib/analytics';
+import { JOBS } from '@/lib/jobs';
 
 function navMaxWidth(pathname: string): string {
   if (pathname === '/search') return 'none';
@@ -17,15 +18,19 @@ function navMaxWidth(pathname: string): string {
 
 export function Nav() {
   const { show } = useToast();
+  const router = useRouter();
   const pathname = usePathname();
   const isHome = pathname === '/';
 
   const [scrolled, setScrolled] = useState(false);
   const [pillVisible, setPillVisible] = useState(false);
 
+  const chipsOpen = isHome && !scrolled;
+
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 8);
+      const s = window.scrollY > 8;
+      setScrolled(s);
       if (isHome) setPillVisible(window.scrollY > 140);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -33,6 +38,7 @@ export function Nav() {
   }, [isHome]);
 
   useEffect(() => {
+    setScrolled(false);
     setPillVisible(false);
   }, [pathname]);
 
@@ -46,6 +52,7 @@ export function Nav() {
         transition: 'box-shadow 0.4s ease',
       }}
     >
+      {/* Row 1: logo + actions */}
       <div
         className="flex items-center justify-between"
         style={{
@@ -59,9 +66,8 @@ export function Nav() {
       >
         <Link href="/"><Logo size="md" /></Link>
 
-        {/* Collapsing search pill — homepage only, appears when scrolled past hero */}
-        <Link
-          href="/search"
+        {/* Compact search pill — appears after scrolling past hero */}
+        <button
           className="absolute left-1/2 flex items-center gap-2"
           style={{
             transform: `translateX(-50%) translateY(${pillVisible ? '0' : '-6px'})`,
@@ -77,13 +83,16 @@ export function Nav() {
             fontSize: 'var(--text-sm)',
             color: 'var(--color-text-muted)',
             whiteSpace: 'nowrap',
-            textDecoration: 'none',
+            cursor: 'pointer',
           }}
-          onClick={() => track('nav_search_pill_clicked')}
+          onClick={() => {
+            track('nav_search_pill_clicked');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
         >
           <Search size={13} strokeWidth={2} style={{ color: 'var(--color-text-faint)', flexShrink: 0 }} />
           What do you want to borrow?
-        </Link>
+        </button>
 
         <div className="flex items-center" style={{ gap: 'var(--space-3)' }}>
           <button
@@ -117,11 +126,7 @@ export function Nav() {
             onClick={() => show('Account settings are coming soon — Borrow is in early access.')}
             aria-label="Account menu"
           >
-            <Menu
-              size={15}
-              strokeWidth={2}
-              style={{ color: 'var(--color-text)', flexShrink: 0 }}
-            />
+            <Menu size={15} strokeWidth={2} style={{ color: 'var(--color-text)', flexShrink: 0 }} />
             <div
               className="relative rounded-full overflow-hidden shrink-0"
               style={{
@@ -130,17 +135,61 @@ export function Nav() {
                 border: '1px solid rgba(0,0,0,0.08)',
               }}
             >
-              <Image
-                src="https://i.pravatar.cc/56?img=12"
-                alt="Account"
-                fill
-                sizes="28px"
-                className="object-cover"
-              />
+              <Image src="https://i.pravatar.cc/56?img=12" alt="Account" fill sizes="28px" className="object-cover" />
             </div>
           </button>
         </div>
       </div>
+
+      {/* Row 2: job discovery chips — homepage only, collapses on scroll */}
+      {isHome && (
+        <div
+          style={{
+            overflow: 'hidden',
+            maxHeight: chipsOpen ? '52px' : '0',
+            opacity: chipsOpen ? 1 : 0,
+            transition: 'max-height 280ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 240ms ease',
+            pointerEvents: chipsOpen ? 'auto' : 'none',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: navMaxWidth(pathname),
+              margin: '0 auto',
+              paddingLeft: 'var(--page-pad-x)',
+              paddingRight: 'var(--page-pad-x)',
+            }}
+          >
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar" style={{ height: 52 }}>
+              {JOBS.map((job) => (
+                <button
+                  key={job.id}
+                  onClick={() => {
+                    track('job_chip_clicked', { job: job.id });
+                    router.push(`/search?job=${job.id}`);
+                  }}
+                  className="flex items-center gap-2 shrink-0 transition-colors duration-150 hover:border-[rgba(0,0,0,0.24)]"
+                  style={{
+                    height: 'var(--btn-h-sm)',
+                    padding: '0 14px',
+                    borderRadius: 'var(--r-badge)',
+                    fontSize: 'var(--text-sm)',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    background: '#FFFFFF',
+                    color: 'var(--color-text)',
+                    border: '1px solid rgba(0,0,0,0.12)',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span style={{ fontSize: 18, lineHeight: 1 }}>{job.emoji}</span>
+                  <span>{job.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
