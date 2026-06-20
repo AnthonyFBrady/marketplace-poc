@@ -26,9 +26,7 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
       style={{
         borderRadius: 'var(--r-card)',
         background: '#FFFFFF',
-        boxShadow: highlighted
-          ? 'var(--shadow-selected)'
-          : 'var(--shadow-low)',
+        boxShadow: highlighted ? 'var(--shadow-selected)' : 'var(--shadow-low)',
         transform: highlighted ? 'translateY(-1px)' : 'none',
       }}
     >
@@ -76,7 +74,7 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
       </div>
 
       {/* Content */}
-      <div style={{ padding: 'var(--space-4)' }}>
+      <div style={{ padding: 'var(--card-padding)' }}>
         {/* Title */}
         <h3
           className="font-[family-name:var(--font-serif)] line-clamp-2"
@@ -85,16 +83,20 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
             color: '#0F0F0E',
             fontWeight: 500,
             lineHeight: 'var(--leading-snug)',
-            marginBottom: 'var(--space-2)',
+            letterSpacing: 'var(--tracking-serif)',
+            marginBottom: 'var(--row-gap)',
           }}
         >
           {listing.title}
         </h3>
 
         {/* Price + neighbourhood */}
-        <div className="flex items-baseline justify-between gap-2" style={{ marginBottom: 'var(--space-2)' }}>
+        <div
+          className="flex items-baseline justify-between gap-2"
+          style={{ marginBottom: 'var(--row-gap)' }}
+        >
           <div className="flex items-baseline gap-1.5">
-            <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: '#D4900F' }}>
+            <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--color-price)' }}>
               ${listing.dailyRate}
             </span>
             <span style={{ fontSize: 'var(--text-xs)', color: '#737373' }}>/day</span>
@@ -114,13 +116,16 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
         </div>
 
         {/* Lister row */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <div className="relative w-5 h-5 rounded-full overflow-hidden shrink-0">
+        <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: 'var(--row-gap)' }}>
+          <div
+            className="relative rounded-full overflow-hidden shrink-0"
+            style={{ width: 'var(--avatar-card)', height: 'var(--avatar-card)' }}
+          >
             <Image
               src={listing.lister.avatar}
               alt={listing.lister.firstName}
               fill
-              sizes="20px"
+              sizes="28px"
               className="object-cover"
               unoptimized
             />
@@ -131,7 +136,7 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
             className="flex items-center gap-0.5 ml-auto"
             style={{ fontSize: 'var(--text-sm)', color: '#0F0F0E', fontWeight: 500 }}
           >
-            <Star size={11} fill="#D4900F" stroke="none" />
+            <Star size={11} fill="var(--color-price)" stroke="none" />
             {listing.lister.rating.toFixed(1)}
             <span style={{ color: '#737373', fontWeight: 400, marginLeft: 2 }}>
               ({listing.lister.reviewCount})
@@ -141,7 +146,7 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
 
         {/* Label row */}
         {(label || listing.availableWeekends) && (
-          <div className="flex items-center gap-1.5 flex-wrap" style={{ marginTop: 'var(--space-2)' }}>
+          <div className="flex items-center gap-1.5 flex-wrap" style={{ marginBottom: 'var(--row-gap)' }}>
             {label && (
               <TrustBadge
                 variant={
@@ -158,10 +163,11 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
               <span
                 style={{
                   fontSize: 'var(--text-xs)',
-                  color: '#525252',
-                  background: 'rgba(0,0,0,0.05)',
+                  color: 'var(--color-signal)',
+                  background: 'var(--color-signal-tint)',
                   padding: '2px 7px',
                   borderRadius: 'var(--r-badge)',
+                  fontWeight: 500,
                 }}
               >
                 Weekends available
@@ -174,10 +180,9 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
         <div
           className="flex items-center gap-1"
           style={{
-            marginTop: 'var(--space-2)',
-            paddingTop: 'var(--space-2)',
+            paddingTop: 'var(--row-gap)',
             borderTop: '1px solid rgba(0,0,0,0.06)',
-            color: '#737373',
+            color: 'var(--color-neutral-icon)',
             fontSize: 'var(--text-xs)',
           }}
         >

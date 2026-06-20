@@ -16,16 +16,20 @@ export function ListerProfile({ lister }: Props) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-start gap-3" style={{ marginBottom: 'var(--space-4)' }}>
+      <div className="flex items-start gap-4" style={{ marginBottom: 'var(--space-4)' }}>
         <div
           className="relative rounded-full overflow-hidden shrink-0"
-          style={{ width: 56, height: 56, border: '2px solid rgba(0,0,0,0.08)' }}
+          style={{
+            width: 'var(--avatar-detail)',
+            height: 'var(--avatar-detail)',
+            border: '2px solid rgba(0,0,0,0.08)',
+          }}
         >
           <Image
             src={lister.avatar}
             alt={lister.name}
             fill
-            sizes="56px"
+            sizes="80px"
             className="object-cover"
             unoptimized
           />
@@ -37,7 +41,7 @@ export function ListerProfile({ lister }: Props) {
             </span>
             {lister.verified && <TrustBadge variant="verified" size="md" />}
           </div>
-          <div style={{ fontSize: 'var(--text-sm)', color: '#525252', marginTop: 2 }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: '#525252', marginTop: 4 }}>
             Member since {lister.memberSince}
           </div>
           <div
@@ -49,7 +53,7 @@ export function ListerProfile({ lister }: Props) {
               className="flex items-center gap-1"
               style={{ color: '#0F0F0E', fontWeight: 500 }}
             >
-              <Star size={13} fill="#D4900F" stroke="none" />
+              <Star size={13} fill="var(--color-price)" stroke="none" />
               {lister.rating.toFixed(1)}
               <span style={{ color: '#737373', fontWeight: 400 }}>
                 ({lister.reviewCount})
@@ -68,26 +72,33 @@ export function ListerProfile({ lister }: Props) {
       )}
 
       {/* Bio */}
-      <p style={{ fontSize: 'var(--text-base)', color: '#525252', lineHeight: 'var(--leading-normal)', marginBottom: 'var(--space-3)' }}>
+      <p
+        style={{
+          fontSize: 'var(--text-base)',
+          color: '#525252',
+          lineHeight: 'var(--leading-normal)',
+          marginBottom: 'var(--space-4)',
+        }}
+      >
         {lister.bio}
       </p>
 
       {/* Stats */}
       <div
-        className="flex items-center gap-4 flex-wrap"
+        className="flex items-center gap-6 flex-wrap"
         style={{
           borderTop: '1px solid rgba(0,0,0,0.08)',
           borderBottom: '1px solid rgba(0,0,0,0.08)',
-          padding: 'var(--space-3) 0',
+          padding: 'var(--space-4) 0',
           marginBottom: 'var(--space-4)',
         }}
       >
         <div className="flex items-center gap-1.5" style={{ fontSize: 'var(--text-sm)', color: '#525252' }}>
-          <Clock size={13} strokeWidth={2} style={{ color: '#2D6A4F' }} />
+          <Clock size={13} strokeWidth={2} style={{ color: 'var(--color-action)' }} />
           {lister.responseTime}
         </div>
         <div className="flex items-center gap-1.5" style={{ fontSize: 'var(--text-sm)', color: '#525252' }}>
-          <CheckCircle size={13} strokeWidth={2} style={{ color: '#2D6A4F' }} />
+          <CheckCircle size={13} strokeWidth={2} style={{ color: 'var(--color-action)' }} />
           {lister.responseRate}% response rate
         </div>
       </div>
@@ -95,14 +106,24 @@ export function ListerProfile({ lister }: Props) {
       {/* Reviews */}
       {lister.reviews.length > 0 && (
         <div style={{ marginBottom: 'var(--space-4)' }}>
-          <h4 style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: '#0F0F0E', marginBottom: 'var(--space-3)' }}>
+          <h4
+            style={{
+              fontSize: 'var(--text-base)',
+              fontWeight: 600,
+              color: '#0F0F0E',
+              marginBottom: 'var(--space-3)',
+            }}
+          >
             What renters say
           </h4>
           <div className="flex flex-col gap-4">
             {lister.reviews.slice(0, 2).map((review, i) => (
               <div key={i}>
-                <div className="flex items-center gap-2" style={{ marginBottom: 'var(--space-2)' }}>
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0">
+                <div className="flex items-center gap-2" style={{ marginBottom: 'var(--row-gap)' }}>
+                  <div
+                    className="relative rounded-full overflow-hidden shrink-0"
+                    style={{ width: 'var(--avatar-review)', height: 'var(--avatar-review)' }}
+                  >
                     <Image
                       src={review.avatar}
                       alt={review.author}
@@ -116,16 +137,19 @@ export function ListerProfile({ lister }: Props) {
                     {review.author}
                   </span>
                   <span style={{ fontSize: 'var(--text-xs)', color: '#737373' }}>{review.date}</span>
-                  <span
-                    className="ml-auto flex items-center gap-0.5"
-                    style={{ fontSize: 'var(--text-xs)', color: '#0F0F0E' }}
-                  >
+                  <span className="ml-auto flex items-center gap-0.5">
                     {Array.from({ length: review.rating }).map((_, s) => (
-                      <Star key={s} size={10} fill="#D4900F" stroke="none" />
+                      <Star key={s} size={10} fill="var(--color-price)" stroke="none" />
                     ))}
                   </span>
                 </div>
-                <p style={{ fontSize: 'var(--text-sm)', color: '#525252', lineHeight: 'var(--leading-normal)' }}>
+                <p
+                  style={{
+                    fontSize: 'var(--text-sm)',
+                    color: '#525252',
+                    lineHeight: 'var(--leading-normal)',
+                  }}
+                >
                   {review.text}
                 </p>
               </div>
@@ -140,8 +164,8 @@ export function ListerProfile({ lister }: Props) {
         style={{
           height: 'var(--btn-h)',
           borderRadius: 'var(--r-badge)',
-          border: '1.5px solid #2D6A4F',
-          color: '#2D6A4F',
+          border: '1.5px solid var(--color-action)',
+          color: 'var(--color-action)',
           background: 'transparent',
           fontSize: 'var(--text-sm)',
         }}

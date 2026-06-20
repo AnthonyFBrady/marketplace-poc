@@ -23,7 +23,7 @@ export function BookingPanel({ listing }: Props) {
       {/* Price */}
       <div>
         <div className="flex items-baseline gap-1.5">
-          <span style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: '#D4900F' }}>
+          <span style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-price)' }}>
             ${listing.dailyRate}
           </span>
           <span style={{ fontSize: 'var(--text-sm)', color: '#737373' }}>/day</span>
@@ -46,13 +46,13 @@ export function BookingPanel({ listing }: Props) {
       >
         <div className="grid grid-cols-2">
           <div className="p-3" style={{ borderRight: '1px solid rgba(0,0,0,0.10)' }}>
-            <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: '#737373', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: '#737373', letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
               From
             </div>
             <div style={{ fontSize: 'var(--text-base)', color: '#525252', marginTop: 2 }}>Add date</div>
           </div>
           <div className="p-3">
-            <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: '#737373', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: '#737373', letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
               To
             </div>
             <div style={{ fontSize: 'var(--text-base)', color: '#525252', marginTop: 2 }}>Add date</div>
@@ -67,7 +67,7 @@ export function BookingPanel({ listing }: Props) {
           style={{
             height: 'var(--btn-h)',
             borderRadius: 'var(--r-badge)',
-            background: '#2D6A4F',
+            background: 'var(--color-action)',
             color: '#FFFFFF',
             fontSize: 'var(--text-base)',
           }}

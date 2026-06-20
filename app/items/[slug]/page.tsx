@@ -82,8 +82,14 @@ export default async function ListingPage({ params }: Props) {
               </div>
 
               <h1
-                className="font-[family-name:var(--font-serif)] leading-snug mb-4"
-                style={{ fontSize: 'var(--text-xl)', fontWeight: 600, color: '#0F0F0E' }}
+                className="font-[family-name:var(--font-serif)] mb-4"
+                style={{
+                  fontSize: 'var(--text-xl)',
+                  fontWeight: 600,
+                  color: '#0F0F0E',
+                  lineHeight: 'var(--leading-snug)',
+                  letterSpacing: 'var(--tracking-serif)',
+                }}
               >
                 {listing.title}
               </h1>
@@ -95,8 +101,8 @@ export default async function ListingPage({ params }: Props) {
 
             {/* Rules */}
             <div
-              className="mt-8 p-5 rounded-2xl"
-              style={{ background: '#F2F2EF' }}
+              className="p-5 rounded-2xl"
+              style={{ marginTop: 'var(--section-gap)', background: '#F2F2EF' }}
             >
               <h2 style={{ fontSize: 15, fontWeight: 600, color: '#0F0F0E', marginBottom: 10 }}>
                 Item rules
@@ -104,7 +110,7 @@ export default async function ListingPage({ params }: Props) {
               <ul className="flex flex-col gap-2">
                 {listing.rules.map((rule, i) => (
                   <li key={i} className="flex items-start gap-2" style={{ fontSize: 'var(--text-base)', color: '#525252' }}>
-                    <AlertCircle size={14} strokeWidth={2} style={{ color: '#D4900F', marginTop: 3, flexShrink: 0 }} />
+                    <AlertCircle size={14} strokeWidth={2} style={{ color: 'var(--color-neutral-icon)', marginTop: 3, flexShrink: 0 }} />
                     {rule}
                   </li>
                 ))}
@@ -127,8 +133,12 @@ export default async function ListingPage({ params }: Props) {
 
             {/* How protection works */}
             <details
-              className="mt-8 p-5 rounded-2xl cursor-pointer"
-              style={{ background: 'rgba(45,106,79,0.06)', border: '1px solid rgba(45,106,79,0.12)' }}
+              className="p-5 rounded-2xl cursor-pointer"
+              style={{
+                marginTop: 'var(--section-gap)',
+                background: 'var(--color-action-tint)',
+                border: '1px solid rgba(45,106,79,0.12)',
+              }}
             >
               <summary
                 style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: '#2D6A4F', listStyle: 'none' }}

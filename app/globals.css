@@ -131,6 +131,42 @@
   /* Button heights */
   --btn-h:    44px;
   --btn-h-sm: 34px;
+
+  /* ---- Semantic tokens (reference primitives above) ---- */
+
+  /* Layout rhythm */
+  --card-padding: var(--space-5);   /* 20px — inner card content */
+  --card-gap:     var(--space-5);   /* 20px — card-to-card gap in list */
+  --row-gap:      var(--space-2);   /* 8px  — gap between rows inside a card */
+  --section-gap:  var(--space-12);  /* 48px — gap between major content sections */
+
+  /* Avatar sizes */
+  --avatar-inline: 20px;   /* inline avatar mentions */
+  --avatar-card:   28px;   /* listing cards */
+  --avatar-review: 28px;   /* review rows */
+  --avatar-detail: 80px;   /* profile / detail pages */
+
+  /* Typography */
+  --tracking-serif: -0.02em;  /* Playfair Display — optical tightening on headings */
+  --tracking-label:  0.06em;  /* uppercase micro-labels */
+
+  /*
+    Colour role rules — enforced across all components.
+    Use semantic tokens, not raw hex values, so role reassignment is one-line.
+
+    --color-price       : price figures and star fills ONLY (amber)
+    --color-action      : CTA buttons and active filter states (green)
+    --color-signal      : positive availability / trust chips (green)
+    --color-neutral-icon: informational icons, rules bullets, metadata (faint)
+  */
+  --color-price:         var(--brand-amber);
+  --color-price-tint:    var(--brand-amber-tint);
+  --color-action:        var(--brand-green);
+  --color-action-hover:  var(--brand-green-hover);
+  --color-action-tint:   var(--brand-green-tint);
+  --color-signal:        var(--brand-green);
+  --color-signal-tint:   var(--brand-green-tint);
+  --color-neutral-icon:  var(--color-text-faint);
 }
 
 @layer base {

@@ -153,7 +153,7 @@ export default function HomePage() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col gap-3 p-4 pt-1">
+              <div className="flex flex-col p-4 pt-1" style={{ gap: 'var(--card-gap)' }}>
                 {filtered.map((l) => (
                   <div key={l.id} id={`card-${l.id}`}>
                     <ListingCard
