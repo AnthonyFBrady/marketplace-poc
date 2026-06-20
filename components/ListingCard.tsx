@@ -136,7 +136,7 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
             className="flex items-center gap-0.5 ml-auto"
             style={{ fontSize: 'var(--text-sm)', color: '#0F0F0E', fontWeight: 500 }}
           >
-            <Star size={11} fill="var(--color-price)" stroke="none" />
+            <Star size={11} fill="var(--color-star)" stroke="none" />
             {listing.lister.rating.toFixed(1)}
             <span style={{ color: '#737373', fontWeight: 400, marginLeft: 2 }}>
               ({listing.lister.reviewCount})

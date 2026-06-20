@@ -2,12 +2,15 @@
 
 import { Listing } from '@/lib/listings';
 import { ListerProfile } from '@/components/ListerProfile';
+import { useToast } from '@/components/ToastProvider';
 
 type Props = {
   listing: Listing;
 };
 
 export function BookingPanel({ listing }: Props) {
+  const { show } = useToast();
+
   return (
     <div
       className="sticky top-20 flex flex-col"
@@ -71,7 +74,7 @@ export function BookingPanel({ listing }: Props) {
             color: '#FFFFFF',
             fontSize: 'var(--text-base)',
           }}
-          onClick={() => alert('Booking is coming soon. This is a POC.')}
+          onClick={() => show('Booking is coming soon — Borrow is in early access.')}
         >
           Request to Borrow
         </button>

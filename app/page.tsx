@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Search } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { useToast } from '@/components/ToastProvider';
 import { LISTINGS, Listing } from '@/lib/listings';
 import { ListingCard } from '@/components/ListingCard';
 import { FilterBar, Filters } from '@/components/FilterBar';
@@ -31,6 +32,7 @@ const defaultFilters: Filters = {
 };
 
 export default function HomePage() {
+  const { show } = useToast();
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -89,7 +91,7 @@ export default function HomePage() {
               background: '#2D6A4F',
               color: '#FFFFFF',
             }}
-            onClick={() => alert('Listing your item is coming soon.')}
+            onClick={() => show('Listing your gear is coming soon — Borrow is in early access.')}
           >
             List your gear
           </button>

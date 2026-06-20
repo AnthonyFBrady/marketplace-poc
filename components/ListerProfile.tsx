@@ -4,12 +4,14 @@ import Image from 'next/image';
 import { Star, Clock, CheckCircle, MessageCircle } from 'lucide-react';
 import { Lister, getReviewLabel } from '@/lib/listings';
 import { TrustBadge, getReviewBadge } from '@/components/TrustBadge';
+import { useToast } from '@/components/ToastProvider';
 
 type Props = {
   lister: Lister;
 };
 
 export function ListerProfile({ lister }: Props) {
+  const { show } = useToast();
   const reviewLabel = getReviewLabel(lister.reviewCount);
   const reviewBadge = getReviewBadge(lister.reviewCount);
 
@@ -53,7 +55,7 @@ export function ListerProfile({ lister }: Props) {
               className="flex items-center gap-1"
               style={{ color: '#0F0F0E', fontWeight: 500 }}
             >
-              <Star size={13} fill="var(--color-price)" stroke="none" />
+              <Star size={13} fill="var(--color-star)" stroke="none" />
               {lister.rating.toFixed(1)}
               <span style={{ color: '#737373', fontWeight: 400 }}>
                 ({lister.reviewCount})
@@ -139,7 +141,7 @@ export function ListerProfile({ lister }: Props) {
                   <span style={{ fontSize: 'var(--text-xs)', color: '#737373' }}>{review.date}</span>
                   <span className="ml-auto flex items-center gap-0.5">
                     {Array.from({ length: review.rating }).map((_, s) => (
-                      <Star key={s} size={10} fill="var(--color-price)" stroke="none" />
+                      <Star key={s} size={10} fill="var(--color-star)" stroke="none" />
                     ))}
                   </span>
                 </div>
@@ -169,7 +171,7 @@ export function ListerProfile({ lister }: Props) {
           background: 'transparent',
           fontSize: 'var(--text-sm)',
         }}
-        onClick={() => alert('Messaging is coming soon. This is a POC.')}
+        onClick={() => show(`Messaging is coming soon — Borrow is in early access.`)}
       >
         <MessageCircle size={15} strokeWidth={2} />
         Message {lister.firstName}

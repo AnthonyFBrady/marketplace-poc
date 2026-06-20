@@ -159,7 +159,8 @@
     --color-signal      : positive availability / trust chips (green)
     --color-neutral-icon: informational icons, rules bullets, metadata (faint)
   */
-  --color-price:         var(--brand-amber);
+  --color-price:         var(--brand-ink);          /* price figures — authoritative, not showy */
+  --color-star:          var(--brand-amber);         /* star ratings — universal amber convention */
   --color-price-tint:    var(--brand-amber-tint);
   --color-action:        var(--brand-green);
   --color-action-hover:  var(--brand-green-hover);
@@ -193,3 +194,8 @@
 /* Hide scrollbar for filter bar and horizontal scroll areas */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
