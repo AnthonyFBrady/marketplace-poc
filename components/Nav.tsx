@@ -20,17 +20,25 @@ export function Nav() {
 
   return (
     <header
-      className="sticky top-0 z-40 flex items-center justify-between shrink-0"
+      className="sticky top-0 z-40 shrink-0"
       style={{
-        height: 'var(--nav-h)',
-        paddingLeft: 'var(--page-pad-x)',
-        paddingRight: 'var(--page-pad-x)',
         background: 'var(--brand-bg)',
         borderBottom: '1px solid rgba(0,0,0,0.06)',
         boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.08)' : '0 2px 12px rgba(0,0,0,0)',
         transition: 'box-shadow 0.4s ease',
       }}
     >
+      {/* Inner container aligns logo + actions to the same grid as page content */}
+      <div
+        className="flex items-center justify-between"
+        style={{
+          maxWidth: 'var(--page-max-w)',
+          margin: '0 auto',
+          height: 'var(--nav-h)',
+          paddingLeft: 'var(--page-pad-x)',
+          paddingRight: 'var(--page-pad-x)',
+        }}
+      >
       <Link href="/">
         <Logo size="md" />
       </Link>
@@ -91,6 +99,7 @@ export function Nav() {
             />
           </div>
         </button>
+      </div>
       </div>
     </header>
   );
