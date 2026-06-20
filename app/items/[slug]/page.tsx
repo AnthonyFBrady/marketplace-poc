@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Logo } from '@/components/Logo';
 import { getListingBySlug, LISTINGS } from '@/lib/listings';
 import { getCategoryById } from '@/lib/categories';
 import { ListingGallery } from '@/components/ListingGallery';
@@ -44,12 +45,8 @@ export default async function ListingPage({ params }: Props) {
         className="sticky top-0 z-40 flex items-center gap-3 px-5 py-3"
         style={{ background: '#FAFAF8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
       >
-        <Link
-          href="/"
-          className="font-[family-name:var(--font-serif)]"
-          style={{ fontSize: 20, fontWeight: 600, color: '#2D6A4F', letterSpacing: '-0.02em' }}
-        >
-          Borrow
+        <Link href="/">
+          <Logo size="sm" />
         </Link>
         <span style={{ color: 'rgba(0,0,0,0.20)', fontSize: 16 }}>/</span>
         <span

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Search } from 'lucide-react';
+import { Logo } from '@/components/Logo';
 import { LISTINGS, Listing } from '@/lib/listings';
 import { ListingCard } from '@/components/ListingCard';
 import { FilterBar, Filters } from '@/components/FilterBar';
@@ -67,15 +68,10 @@ export default function HomePage() {
         style={{ background: '#FAFAF8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
       >
         <div className="flex items-center gap-2">
-          <span
-            className="font-[family-name:var(--font-serif)]"
-            style={{ fontSize: 22, fontWeight: 600, color: '#2D6A4F', letterSpacing: '-0.02em' }}
-          >
-            Borrow
-          </span>
+          <Logo size="md" />
           <span
             className="hidden sm:inline text-xs font-medium px-2 py-0.5 rounded-full"
-            style={{ background: 'rgba(45,106,79,0.10)', color: '#2D6A4F' }}
+            style={{ background: 'var(--color-action-tint)', color: 'var(--color-action)' }}
           >
             Toronto
           </span>
