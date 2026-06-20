@@ -143,7 +143,7 @@
   --section-gap:        var(--space-12);
 
   /* Page layout — apply to every full-width content section */
-  --page-max-w:         1280px;   /* browse/grid pages */
+  --page-max-w:         1440px;   /* browse/grid pages */
   --page-max-w-content: 1024px;   /* detail/content pages */
   --page-pad-x:         clamp(16px, 4vw, 48px);  /* 16px mobile → 48px desktop */
   --hero-max-w:         560px;    /* constrained hero text + search inputs */

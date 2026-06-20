@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display } from "next/font/google";
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
 import { Nav } from "@/components/Nav";
 import { PageTransition } from "@/components/PageTransition";
 
-const dmSans = DM_Sans({
+const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-CA"
-      className={`${dmSans.variable} ${playfair.variable} h-full`}
+      className={`${plusJakartaSans.variable} ${playfair.variable} h-full`}
     >
       <body className="min-h-full flex flex-col font-[family-name:var(--font-sans)]">
         <ToastProvider>

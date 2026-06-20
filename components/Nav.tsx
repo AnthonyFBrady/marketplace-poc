@@ -1,22 +1,34 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { useToast } from '@/components/ToastProvider';
 import { track } from '@/lib/analytics';
 
 export function Nav() {
   const { show } = useToast();
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+
   const [scrolled, setScrolled] = useState(false);
+  const [pillVisible, setPillVisible] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      if (isHome) setPillVisible(window.scrollY > 140);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [isHome]);
+
+  useEffect(() => {
+    setPillVisible(false);
+  }, [pathname]);
 
   return (
     <header
@@ -28,10 +40,10 @@ export function Nav() {
         transition: 'box-shadow 0.4s ease',
       }}
     >
-      {/* Inner container aligns logo + actions to the same grid as page content */}
       <div
         className="flex items-center justify-between"
         style={{
+          position: 'relative',
           maxWidth: 'var(--page-max-w)',
           margin: '0 auto',
           height: 'var(--nav-h)',
@@ -39,67 +51,89 @@ export function Nav() {
           paddingRight: 'var(--page-pad-x)',
         }}
       >
-      <Link href="/">
-        <Logo size="md" />
-      </Link>
+        <Link href="/"><Logo size="md" /></Link>
 
-      <div className="flex items-center" style={{ gap: 'var(--space-3)' }}>
-        {/* List your gear CTA */}
-        <button
-          className="font-medium rounded-full transition-opacity hover:opacity-80 hidden sm:block"
+        {/* Collapsing search pill — homepage only, appears when scrolled past hero */}
+        <Link
+          href="/search"
+          className="absolute left-1/2 flex items-center gap-2"
           style={{
+            transform: `translateX(-50%) translateY(${pillVisible ? '0' : '-6px'})`,
+            opacity: pillVisible ? 1 : 0,
+            pointerEvents: pillVisible ? 'auto' : 'none',
+            transition: 'opacity 320ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 320ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             height: 'var(--btn-h-sm)',
             padding: '0 var(--space-4)',
-            fontSize: 'var(--text-sm)',
-            background: 'var(--color-action)',
-            color: '#FFFFFF',
-          }}
-          onClick={() => {
-            track('list_gear_clicked');
-            show('Listing your gear is coming soon — Borrow is in early access.');
-          }}
-        >
-          List your gear
-        </button>
-
-        {/* Account pill — Menu icon + avatar */}
-        <button
-          className="flex items-center transition-all duration-200 hover:shadow-md"
-          style={{
-            height: 'var(--btn-h-sm)',
-            paddingLeft: 'var(--space-3)',
-            paddingRight: 4,
             borderRadius: 'var(--r-badge)',
-            border: '1px solid rgba(0,0,0,0.14)',
             background: '#FFFFFF',
-            gap: 'var(--space-2)',
+            border: '1px solid rgba(0,0,0,0.14)',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            fontSize: 'var(--text-sm)',
+            color: 'var(--color-text-muted)',
+            whiteSpace: 'nowrap',
+            textDecoration: 'none',
           }}
-          onClick={() => show('Account settings are coming soon — Borrow is in early access.')}
-          aria-label="Account menu"
+          onClick={() => track('nav_search_pill_clicked')}
         >
-          <Menu
-            size={15}
-            strokeWidth={2}
-            style={{ color: 'var(--color-text)', flexShrink: 0 }}
-          />
-          <div
-            className="relative rounded-full overflow-hidden shrink-0"
+          <Search size={13} strokeWidth={2} style={{ color: 'var(--color-text-faint)', flexShrink: 0 }} />
+          What do you want to borrow?
+        </Link>
+
+        <div className="flex items-center" style={{ gap: 'var(--space-3)' }}>
+          <button
+            className="font-medium rounded-full transition-opacity hover:opacity-80 hidden sm:block"
             style={{
-              width: 'var(--avatar-card)',
-              height: 'var(--avatar-card)',
-              border: '1px solid rgba(0,0,0,0.08)',
+              height: 'var(--btn-h-sm)',
+              padding: '0 var(--space-4)',
+              fontSize: 'var(--text-sm)',
+              background: 'var(--color-action)',
+              color: '#FFFFFF',
+            }}
+            onClick={() => {
+              track('list_gear_clicked');
+              show('Listing your gear is coming soon — Borrow is in early access.');
             }}
           >
-            <Image
-              src="https://i.pravatar.cc/56?img=12"
-              alt="Account"
-              fill
-              sizes="28px"
-              className="object-cover"
+            List your gear
+          </button>
+
+          <button
+            className="flex items-center transition-all duration-200 hover:shadow-md"
+            style={{
+              height: 'var(--btn-h-sm)',
+              paddingLeft: 'var(--space-3)',
+              paddingRight: 4,
+              borderRadius: 'var(--r-badge)',
+              border: '1px solid rgba(0,0,0,0.14)',
+              background: '#FFFFFF',
+              gap: 'var(--space-2)',
+            }}
+            onClick={() => show('Account settings are coming soon — Borrow is in early access.')}
+            aria-label="Account menu"
+          >
+            <Menu
+              size={15}
+              strokeWidth={2}
+              style={{ color: 'var(--color-text)', flexShrink: 0 }}
             />
-          </div>
-        </button>
-      </div>
+            <div
+              className="relative rounded-full overflow-hidden shrink-0"
+              style={{
+                width: 'var(--avatar-card)',
+                height: 'var(--avatar-card)',
+                border: '1px solid rgba(0,0,0,0.08)',
+              }}
+            >
+              <Image
+                src="https://i.pravatar.cc/56?img=12"
+                alt="Account"
+                fill
+                sizes="28px"
+                className="object-cover"
+              />
+            </div>
+          </button>
+        </div>
       </div>
     </header>
   );
