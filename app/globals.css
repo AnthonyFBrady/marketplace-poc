@@ -32,10 +32,10 @@
   --radius-xl: calc(var(--radius) * 1.4);
 
   /* Brand colours exposed as Tailwind utilities */
-  --color-brand-green:       #2D6A4F;   /* primary — buttons, active states, badges */
-  --color-brand-green-hover: #255C43;   /* darker on hover */
-  --color-brand-green-tint:  rgba(45,106,79,0.08); /* backgrounds, badge fills */
-  --color-brand-amber:       #D4900F;   /* price, stars, warmth moments */
+  --color-brand-green:       #2D6A4F;
+  --color-brand-green-hover: #255C43;
+  --color-brand-green-tint:  rgba(45,106,79,0.08);
+  --color-brand-amber:       #D4900F;
   --color-brand-amber-tint:  rgba(212,144,15,0.10);
   --color-brand-bg:          #FAFAF8;
   --color-brand-surface:     #F2F2EF;
@@ -135,32 +135,31 @@
   /* ---- Semantic tokens (reference primitives above) ---- */
 
   /* Layout rhythm */
-  --card-padding: var(--space-5);   /* 20px — inner card content */
-  --card-gap:     var(--space-5);   /* 20px — card-to-card gap in list */
-  --row-gap:      var(--space-2);   /* 8px  — gap between rows inside a card */
-  --section-gap:  var(--space-12);  /* 48px — gap between major content sections */
+  --nav-h:        56px;
+  --card-padding: var(--space-5);
+  --card-gap:     var(--space-5);
+  --row-gap:      var(--space-2);
+  --section-gap:  var(--space-12);
 
   /* Avatar sizes */
-  --avatar-inline: 20px;   /* inline avatar mentions */
-  --avatar-card:   28px;   /* listing cards */
-  --avatar-review: 28px;   /* review rows */
-  --avatar-detail: 80px;   /* profile / detail pages */
+  --avatar-inline: 20px;
+  --avatar-card:   28px;
+  --avatar-review: 28px;
+  --avatar-detail: 80px;
 
   /* Typography */
-  --tracking-serif: -0.02em;  /* Playfair Display — optical tightening on headings */
-  --tracking-label:  0.06em;  /* uppercase micro-labels */
+  --tracking-serif: -0.02em;
+  --tracking-label:  0.06em;
 
-  /*
-    Colour role rules — enforced across all components.
-    Use semantic tokens, not raw hex values, so role reassignment is one-line.
+  /* Heading scale */
+  --h1-size: var(--text-xl);    /* 28px — Playfair Display 600 */
+  --h2-size: var(--text-lg);    /* 22px — DM Sans 600 */
+  --h3-size: var(--text-md);    /* 17px — DM Sans 600 */
+  --h4-size: var(--text-base);  /* 15px — DM Sans 600 */
 
-    --color-price       : price figures and star fills ONLY (amber)
-    --color-action      : CTA buttons and active filter states (green)
-    --color-signal      : positive availability / trust chips (green)
-    --color-neutral-icon: informational icons, rules bullets, metadata (faint)
-  */
-  --color-price:         var(--brand-ink);          /* price figures — authoritative, not showy */
-  --color-star:          var(--brand-amber);         /* star ratings — universal amber convention */
+  /* Colour roles */
+  --color-price:         var(--brand-ink);
+  --color-star:          var(--brand-amber);
   --color-price-tint:    var(--brand-amber-tint);
   --color-action:        var(--brand-green);
   --color-action-hover:  var(--brand-green-hover);
@@ -168,6 +167,12 @@
   --color-signal:        var(--brand-green);
   --color-signal-tint:   var(--brand-green-tint);
   --color-neutral-icon:  var(--color-text-faint);
+
+  /* State colours */
+  --color-error:         #C0392B;
+  --color-error-tint:    rgba(192,57,43,0.08);
+  --color-warning:       var(--brand-amber);
+  --color-success:       var(--brand-green);
 }
 
 @layer base {
@@ -185,6 +190,10 @@
   body {
     @apply min-h-full;
   }
+  :focus-visible {
+    outline: 2px solid var(--color-action);
+    outline-offset: 2px;
+  }
 }
 
 /* MapLibre GL overrides */
@@ -198,4 +207,9 @@
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
 }

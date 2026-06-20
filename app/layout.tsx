@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
+import { Nav } from "@/components/Nav";
+import { PageTransition } from "@/components/PageTransition";
 
 const dmSans = DM_Sans({
   variable: "--font-sans",
@@ -32,7 +34,10 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable} h-full`}
     >
       <body className="min-h-full flex flex-col font-[family-name:var(--font-sans)]">
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <Nav />
+          <PageTransition>{children}</PageTransition>
+        </ToastProvider>
       </body>
     </html>
   );

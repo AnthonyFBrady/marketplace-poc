@@ -27,7 +27,6 @@ export function ListingGallery({ photos, title }: Props) {
           priority
           sizes="(max-width: 768px) 100vw, 60vw"
           className="object-cover cursor-zoom-in"
-          unoptimized
           onClick={() => setLightbox(true)}
         />
 
@@ -73,7 +72,7 @@ export function ListingGallery({ photos, title }: Props) {
               style={{
                 aspectRatio: '1/1',
                 maxWidth: 72,
-                outline: i === active ? '2px solid #2D6A4F' : '2px solid transparent',
+                outline: i === active ? '2px solid var(--color-action)' : '2px solid transparent',
                 outlineOffset: 1,
                 opacity: i === active ? 1 : 0.65,
               }}
@@ -84,7 +83,6 @@ export function ListingGallery({ photos, title }: Props) {
                 fill
                 sizes="72px"
                 className="object-cover"
-                unoptimized
               />
             </button>
           ))}
@@ -117,7 +115,6 @@ export function ListingGallery({ photos, title }: Props) {
               fill
               sizes="90vw"
               className="object-contain"
-              unoptimized
             />
             {photos.length > 1 && (
               <>

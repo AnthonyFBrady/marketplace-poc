@@ -13,8 +13,9 @@ export function BookingPanel({ listing }: Props) {
 
   return (
     <div
-      className="sticky top-20 flex flex-col"
+      className="sticky flex flex-col"
       style={{
+        top: 'calc(var(--nav-h) + var(--space-4))',
         background: '#FFFFFF',
         borderRadius: 'var(--r-panel)',
         boxShadow: 'var(--shadow-panel)',

@@ -33,9 +33,7 @@ export function ListingPin({ listing, selected, onClick }: Props) {
             height: 48,
             borderRadius: 10,
             border: selected ? '2.5px solid #FFFFFF' : '2px solid rgba(255,255,255,0.7)',
-            boxShadow: selected
-              ? '0 4px 16px rgba(0,0,0,0.28), 0 0 0 2px #2D6A4F'
-              : '0 2px 8px rgba(0,0,0,0.18)',
+            boxShadow: selected ? 'var(--shadow-selected)' : 'var(--shadow-low)',
           }}
         >
           <Image
@@ -44,7 +42,6 @@ export function ListingPin({ listing, selected, onClick }: Props) {
             fill
             sizes="48px"
             className="object-cover"
-            unoptimized
           />
           {/* Verified dot */}
           {listing.lister.verified && (
@@ -56,7 +53,7 @@ export function ListingPin({ listing, selected, onClick }: Props) {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                background: '#D4900F',
+                background: 'var(--color-action)',
                 border: '1.5px solid #fff',
               }}
             />
@@ -66,7 +63,7 @@ export function ListingPin({ listing, selected, onClick }: Props) {
         <div
           style={{
             marginTop: 4,
-            background: selected ? '#2D6A4F' : '#0F0F0E',
+            background: selected ? 'var(--color-action)' : 'var(--brand-ink)',
             color: '#FFFFFF',
             fontSize: 11,
             fontWeight: 600,
@@ -86,7 +83,7 @@ export function ListingPin({ listing, selected, onClick }: Props) {
             height: 0,
             borderLeft: '5px solid transparent',
             borderRight: '5px solid transparent',
-            borderTop: `5px solid ${selected ? '#2D6A4F' : '#0F0F0E'}`,
+            borderTop: `5px solid ${selected ? 'var(--color-action)' : 'var(--brand-ink)'}`,
             marginTop: 0,
           }}
         />

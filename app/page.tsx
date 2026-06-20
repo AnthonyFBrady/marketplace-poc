@@ -3,8 +3,7 @@
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Search } from 'lucide-react';
-import { Logo } from '@/components/Logo';
-import { useToast } from '@/components/ToastProvider';
+import { Skeleton } from '@/components/Skeleton';
 import { LISTINGS, Listing } from '@/lib/listings';
 import { ListingCard } from '@/components/ListingCard';
 import { FilterBar, Filters } from '@/components/FilterBar';
@@ -12,14 +11,7 @@ import { distanceKm } from '@/lib/utils';
 
 const MapView = dynamic(() => import('@/components/MapView').then((m) => m.MapView), {
   ssr: false,
-  loading: () => (
-    <div
-      className="w-full h-full flex items-center justify-center"
-      style={{ background: '#E8E8E4' }}
-    >
-      <span style={{ color: '#737373', fontSize: 14 }}>Loading map...</span>
-    </div>
-  ),
+  loading: () => <Skeleton width="100%" height="100%" radius={0} />,
 });
 
 const TORONTO = { lat: 43.6532, lng: -79.3832 };
@@ -32,7 +24,6 @@ const defaultFilters: Filters = {
 };
 
 export default function HomePage() {
-  const { show } = useToast();
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -63,41 +54,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col" style={{ height: '100dvh', overflow: 'hidden' }}>
-      {/* Nav */}
-      <header
-        className="flex items-center justify-between px-5 py-3 shrink-0 z-40"
-        style={{ background: '#FAFAF8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}
-      >
-        <div className="flex items-center gap-2">
-          <Logo size="md" />
-          <span
-            className="hidden sm:inline text-xs font-medium px-2 py-0.5 rounded-full"
-            style={{ background: 'var(--color-action-tint)', color: 'var(--color-action)' }}
-          >
-            Toronto
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="hidden sm:block" style={{ fontSize: 13, color: '#525252' }}>
-            {filtered.length} items near you
-          </span>
-          <button
-            className="font-medium rounded-full transition-opacity hover:opacity-80"
-            style={{
-              height: 'var(--btn-h-sm)',
-              padding: '0 16px',
-              fontSize: 'var(--text-sm)',
-              background: '#2D6A4F',
-              color: '#FFFFFF',
-            }}
-            onClick={() => show('Listing your gear is coming soon — Borrow is in early access.')}
-          >
-            List your gear
-          </button>
-        </div>
-      </header>
-
+    <div className="flex flex-col" style={{ height: 'calc(100dvh - var(--nav-h))', overflow: 'hidden' }}>
       {/* Filter bar */}
       <FilterBar filters={filters} onChange={setFilters} />
 
@@ -112,21 +69,21 @@ export default function HomePage() {
           <div className="px-4 pt-3 pb-2 shrink-0">
             <div
               className="flex items-center gap-2 rounded-xl px-3 py-2.5"
-              style={{ background: '#F2F2EF', border: '1px solid rgba(0,0,0,0.08)' }}
+              style={{ background: 'var(--brand-surface)', border: '1px solid rgba(0,0,0,0.08)' }}
             >
-              <Search size={15} strokeWidth={2} style={{ color: '#737373', flexShrink: 0 }} />
+              <Search size={15} strokeWidth={2} style={{ color: 'var(--color-text-faint)', flexShrink: 0 }} />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="What do you need?"
                 className="flex-1 bg-transparent outline-none"
-                style={{ fontSize: 'var(--text-base)', color: '#0F0F0E' }}
+                style={{ fontSize: 'var(--text-base)', color: 'var(--color-text)' }}
               />
               {query && (
                 <button
                   onClick={() => setQuery('')}
-                  style={{ color: '#737373', fontSize: 13, flexShrink: 0 }}
+                  style={{ color: 'var(--color-text-faint)', fontSize: 13, flexShrink: 0 }}
                 >
                   ×
                 </button>
@@ -136,7 +93,7 @@ export default function HomePage() {
 
           {/* Results count */}
           <div className="px-4 pb-2 shrink-0">
-            <span style={{ fontSize: 12, color: '#737373' }}>
+            <span style={{ fontSize: 12, color: 'var(--color-text-faint)' }}>
               {filtered.length} {filtered.length === 1 ? 'item' : 'items'} in Toronto
             </span>
           </div>
@@ -146,7 +103,7 @@ export default function HomePage() {
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                 <span style={{ fontSize: 32, marginBottom: 12 }}>🔍</span>
-                <p style={{ fontSize: 15, color: '#525252' }}>
+                <p style={{ fontSize: 15, color: 'var(--color-text-muted)' }}>
                   Nothing matched. Try a different search or clear your filters.
                 </p>
               </div>
@@ -176,9 +133,7 @@ export default function HomePage() {
           />
 
           {/* Mobile search */}
-          <div
-            className="md:hidden absolute top-3 left-3 right-3 z-10"
-          >
+          <div className="md:hidden absolute top-3 left-3 right-3 z-10">
             <div
               className="flex items-center gap-2 rounded-xl px-3 py-2.5"
               style={{
@@ -188,17 +143,17 @@ export default function HomePage() {
                 backdropFilter: 'blur(8px)',
               }}
             >
-              <Search size={15} strokeWidth={2} style={{ color: '#737373', flexShrink: 0 }} />
+              <Search size={15} strokeWidth={2} style={{ color: 'var(--color-text-faint)', flexShrink: 0 }} />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="What do you need?"
                 className="flex-1 bg-transparent outline-none"
-                style={{ fontSize: 'var(--text-base)', color: '#0F0F0E' }}
+                style={{ fontSize: 'var(--text-base)', color: 'var(--color-text)' }}
               />
               {query && (
-                <button onClick={() => setQuery('')} style={{ color: '#737373', fontSize: 16 }}>
+                <button onClick={() => setQuery('')} style={{ color: 'var(--color-text-faint)', fontSize: 16 }}>
                   ×
                 </button>
               )}

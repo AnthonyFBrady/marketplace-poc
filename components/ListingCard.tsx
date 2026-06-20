@@ -38,7 +38,6 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
           fill
           sizes="(max-width: 768px) 100vw, 280px"
           className="object-cover"
-          unoptimized
         />
         {listing.popularThisWeek && (
           <div
@@ -127,7 +126,6 @@ export function ListingCard({ listing, highlighted, onHover }: Props) {
               fill
               sizes="28px"
               className="object-cover"
-              unoptimized
             />
           </div>
           <span style={{ fontSize: 'var(--text-sm)', color: '#525252' }}>{listing.lister.firstName}</span>

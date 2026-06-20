@@ -33,7 +33,6 @@ export function ListerProfile({ lister }: Props) {
             fill
             sizes="80px"
             className="object-cover"
-            unoptimized
           />
         </div>
         <div className="flex-1 min-w-0">
@@ -132,7 +131,6 @@ export function ListerProfile({ lister }: Props) {
                       fill
                       sizes="28px"
                       className="object-cover"
-                      unoptimized
                     />
                   </div>
                   <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: '#0F0F0E' }}>
